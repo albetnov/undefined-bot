@@ -47,6 +47,7 @@ const embeds = new EmbedBuilder()
   Collab Final Flutter Project
 
   * May Changes from time to time.
+  Powered by ${hyperlink("Mas Erico", "https://www.youtube.com/c/EricoDarmawanHandoyo")}.
 `
   )
   .setAuthor({ name: "Albet Novendo", url: "https://github.com/albetnov" })
