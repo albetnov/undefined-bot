@@ -1,16 +1,16 @@
 import { config } from "dotenv";
 config();
 import { Client, Routes, REST } from "discord.js";
-import { loadKernel } from "./Kernel.js";
+import { kernel } from "./Kernel";
 
 const client = new Client({ intents: [] });
-const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+const rest = new REST({ version: "10" }).setToken(process.env.TOKEN!);
 
 client.on("ready", () => {
   console.log("Artisan is painting... 🖌️");
 });
 
-const commands = loadKernel();
+const commands = kernel;
 
 client.on("interactionCreate", (iteraction) => {
   if (!iteraction.isChatInputCommand()) return;
@@ -24,7 +24,7 @@ client.on("interactionCreate", (iteraction) => {
 
 async function main() {
   try {
-    await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID), {
+    await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!), {
       body: commands.map((item) => {
         return item.schema;
       }),

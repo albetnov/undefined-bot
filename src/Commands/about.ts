@@ -1,11 +1,16 @@
-import { AttachmentBuilder, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+  AttachmentBuilder,
+  ChatInputCommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 
 export const aboutSchema = new SlashCommandBuilder()
   .setName("about")
   .setDescription("What is me?")
   .toJSON();
 
-export default (action) => {
+export default (action: ChatInputCommandInteraction) => {
   const gambarAyang = new AttachmentBuilder("./src/Commands/assets/ayang.jpeg");
 
   const ayang = new EmbedBuilder().setTitle("🤍").setImage("attachment://ayang.jpeg")

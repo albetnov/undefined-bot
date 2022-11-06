@@ -5,15 +5,19 @@
   "main": "src/index.js",
   "author": "albetnov",
   "license": "MIT",
-  "type": "module",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "init:config": "tsc --init",
+    "start": "nodemon",
+    "dev:delete": "ts-node ./src/Utils/clear.ts"
   },
   "dependencies": {
     "discord.js": "^14.6.0",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "ts-node": "^10.9.1",
+    "@types/node": "^18.11.9",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.8.4"
   }
 }

@@ -1,4 +1,4 @@
-import { ChannelType, SlashCommandBuilder } from "discord.js";
+import { ChannelType, ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
 export const devSchema = new SlashCommandBuilder()
   .setName("dev")
@@ -12,13 +12,18 @@ export const devSchema = new SlashCommandBuilder()
   )
   .toJSON();
 
-export default (action) => {
+export default (action: ChatInputCommandInteraction) => {
   if (!action.guild) return;
-
-  const channel = action.options.getChannel("channel");
 
   if (action.user.id !== process.env.AUTHORIZED_ID) {
     action.reply({ content: "Only bot author allowed to do this command!", ephemeral: true });
+    return;
+  }
+
+  const channel = action.options.getChannel("channel");
+
+  if (!channel) {
+    action.reply({ content: "Please provide a valid channel!", ephemeral: true });
     return;
   }
 
