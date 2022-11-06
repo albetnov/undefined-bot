@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 
 export default abstract class BaseCommand {
-  name: string = "base";
+  abstract name: string;
 
   command() {
     return new SlashCommandBuilder().setName(this.name);
