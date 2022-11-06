@@ -11,7 +11,7 @@ export const aboutSchema = new SlashCommandBuilder()
   .toJSON();
 
 export default (action: ChatInputCommandInteraction) => {
-  const gambarAyang = new AttachmentBuilder("./src/Commands/assets/ayang.jpeg");
+  const gambarAyang = new AttachmentBuilder("./assets/ayang.jpeg");
 
   const ayang = new EmbedBuilder().setTitle("🤍").setImage("attachment://ayang.jpeg")
     .setDescription(`

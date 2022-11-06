@@ -1,19 +1,42 @@
-import { ChannelType, ChatInputCommandInteraction, Client, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, Client, Message, SlashCommandBuilder } from "discord.js";
 import flutter from "../Boot/flutter";
 
 export const devSchema = new SlashCommandBuilder()
   .setName("dev")
   .setDescription("Enable the settings of this Bot right in time!")
-  .addChannelOption((option) =>
-    option
-      .setName("channel")
-      .setDescription("The channel to broadcast flutter roadmap")
-      .addChannelTypes(ChannelType.GuildText)
-      .setRequired(true)
-  )
   .toJSON();
 
-export default (action: ChatInputCommandInteraction, client?: Client) => {
+export const listener = {
+  listen: false,
+  user: "",
+};
+
+export const devEvents = [
+  {
+    name: "SetFlutterChannel",
+    handler(parameters: string[], client: Client, response: Message) {
+      if (!parameters || parameters.length <= 0 || parameters[0].trim() === "") {
+        response.channel.send("Channel ID is required!");
+        return;
+      }
+
+      const channel = client.channels.cache.get(parameters[0]);
+
+      if (!channel) {
+        response.channel.send({ content: "Channel ID invalid!" });
+        return;
+      }
+
+      process.env.FLUTTER_CHANNEL_ID = parameters[0];
+      flutter(client);
+      response.channel.send({
+        content: `Flutter channel has been set to ${channel?.toString()}`,
+      });
+    },
+  },
+];
+
+export default (action: ChatInputCommandInteraction) => {
   if (!action.guild) return;
 
   if (action.user.id !== process.env.AUTHORIZED_ID) {
@@ -21,18 +44,11 @@ export default (action: ChatInputCommandInteraction, client?: Client) => {
     return;
   }
 
-  const channel = action.options.getChannel("channel");
+  listener.listen = true;
 
-  if (!channel) {
-    action.reply({ content: "Please provide a valid channel!", ephemeral: true });
-    return;
-  }
+  listener.user = action.user.id;
 
-  process.env.FLUTTER_CHANNEL_ID = channel.id;
-
-  if (!client) return;
-
-  flutter(client); // Re schedule job to corresponding channel.
-
-  action.reply({ content: `Flutter channel has been set to ${channel}`, ephemeral: true });
+  action.reply(
+    "Development Mode: Interactive Mode Enabled. I will listening to message with prefix 'Artisan:'."
+  );
 };

@@ -1,10 +1,6 @@
-import {
-  ChatInputCommandInteraction,
-  Client,
-  RESTPostAPIApplicationCommandsJSONBody,
-} from "discord.js";
+import { ChatInputCommandInteraction, RESTPostAPIApplicationCommandsJSONBody } from "discord.js";
 
-type HandlerSchema = (action: ChatInputCommandInteraction, client?: Client) => void;
+type HandlerSchema = (action: ChatInputCommandInteraction) => void;
 
 /**
  * An object builder for old commands (Files)

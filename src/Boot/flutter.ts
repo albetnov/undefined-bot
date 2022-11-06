@@ -13,13 +13,11 @@ export default async function flutter(client: Client) {
     return;
   }
 
-  scheduleJob(new Date(2022, 10, 6, 20, 20, 0), () => {
+  scheduleJob(new Date(2022, 10, 6, 21, 48, 0), () => {
     const embeds = new EmbedBuilder()
       .setTitle("Flutter Roadmap, Begin!")
       .setDescription(
         `
-      BELUM START INI CUMAN TEST
-
       Your first assignment would be so simple, all you need to do is simply preparing your environment
       for developing Flutter and of course Dart.
 
