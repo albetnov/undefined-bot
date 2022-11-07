@@ -1,6 +1,6 @@
 import { Events, Interaction } from "discord.js";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
-import { kernel } from "../Kernel";
+import Commands from "../Kernels/Commands";
 
 export default class InteractionCreate extends BaseEvent<Interaction> {
   type: string = Events.InteractionCreate;
@@ -8,7 +8,7 @@ export default class InteractionCreate extends BaseEvent<Interaction> {
   handler({ action: iteraction }: ActionInterface<Interaction>) {
     if (!iteraction.isChatInputCommand()) return;
 
-    kernel.forEach((item) => {
+    Commands.forEach((item) => {
       if (iteraction.commandName === item.name) {
         item.handler(iteraction);
       }

@@ -1,6 +1,6 @@
 import { Client, Events } from "discord.js";
+import Boot from "../Kernels/Boot";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
-import BootKernel from "../Boot/Kernel";
 
 export default class Ready extends BaseEvent<Client> {
   type: string = Events.ClientReady;
@@ -8,7 +8,7 @@ export default class Ready extends BaseEvent<Client> {
   handler({ client }: ActionInterface<Client>) {
     console.log("Artisan is painting... 🖌️");
 
-    BootKernel.forEach((item) => {
+    Boot.forEach((item) => {
       item(client);
     });
   }

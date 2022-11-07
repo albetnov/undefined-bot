@@ -1,12 +1,12 @@
 import { Events, Message } from "discord.js";
-import { listenerKernel } from "../Kernel";
+import Listeners from "../Kernels/Listeners";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 
 export default class MessageCreate extends BaseEvent<Message> {
   type: string = Events.MessageCreate;
 
   handler({ action: message, client }: ActionInterface<Message>) {
-    listenerKernel.forEach((item) => {
+    Listeners.forEach((item) => {
       if (item.listener.listen) {
         if (
           !message.content ||
