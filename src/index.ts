@@ -6,9 +6,8 @@ process.env.TZ = "Asia/Jakarta";
 import { config } from "dotenv";
 config();
 import { Client, Routes, REST, GatewayIntentBits } from "discord.js";
-import { kernel } from "./Kernel";
+import { kernel, listenerKernel } from "./Kernel";
 import BootKernel from "./Boot/Kernel";
-import { devEvents, listener } from "./Commands/dev";
 
 const client = new Client({
   intents: [
@@ -35,16 +34,17 @@ const commands = kernel;
  * This should only be used for developer.
  */
 client.on("messageCreate", (message) => {
-  if (listener.listen) {
-    if (
-      !message.content ||
-      !message.content.startsWith("Artisan:") ||
-      message.author.id !== listener.user
-    )
-      return;
-    let args = message.content.split(":")[1];
+  listenerKernel.forEach((item) => {
+    if (item.listener.listen) {
+      if (
+        !message.content ||
+        !message.content.startsWith("Artisan:") ||
+        message.author.id !== item.listener.data
+      )
+        return;
 
-    devEvents.forEach((item) => {
+      let args = message.content.split(":")[1];
+
       let parameters = args.split(" ");
 
       if (parameters.length > 0) {
@@ -55,8 +55,8 @@ client.on("messageCreate", (message) => {
       if (args.toLowerCase() === item.name.toLocaleLowerCase()) {
         item.handler(parameters, client, message);
       }
-    });
-  }
+    }
+  });
 });
 
 client.on("interactionCreate", (iteraction) => {
