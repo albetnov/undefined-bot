@@ -4,6 +4,7 @@ import Kernel, { loadKernel } from "./Roadmap/Kernel";
 
 export default class Roadmap extends BaseCommand {
   name = "roadmap";
+  description = "Shows roadmap path of specific programming language";
   LANGUAGE = "language";
 
   constructor() {
@@ -13,7 +14,6 @@ export default class Roadmap extends BaseCommand {
 
   builder() {
     return this.command()
-      .setDescription("Shows roadmap path of specific programming language")
       .addStringOption((option) =>
         option
           .setName(this.LANGUAGE)

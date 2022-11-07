@@ -4,6 +4,7 @@ import { imgUrl, message } from "../Utils/spiritServer";
 
 export default class Spirit extends BaseCommand {
   name = "spirit";
+  description = "Built a spirit for you right away!";
 
   USER = "user";
 
@@ -47,7 +48,6 @@ export default class Spirit extends BaseCommand {
 
   builder() {
     return this.command()
-      .setDescription("Built a spirit for you right away!")
       .addUserOption((option) =>
         option
           .setName(this.USER)

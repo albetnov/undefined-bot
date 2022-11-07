@@ -1,10 +1,11 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, CacheType } from "discord.js";
+import BaseCommand from "../Utils/BaseCommand";
 
-export const pingSchema = new SlashCommandBuilder()
-  .setName("ping")
-  .setDescription("I shall responded pong to you.")
-  .toJSON();
+export default class Ping extends BaseCommand {
+  name = "ping";
+  description = "I will reply you with pong!";
 
-export default (action: ChatInputCommandInteraction) => {
-  action.reply("Pong!");
-};
+  handler(action: ChatInputCommandInteraction<CacheType>): void {
+    action.reply("Pong!");
+  }
+}

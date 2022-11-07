@@ -1,19 +1,10 @@
-import {
-  ChatInputCommandInteraction,
-  CacheType,
-  RESTPostAPIApplicationCommandsJSONBody,
-} from "discord.js";
+import { ChatInputCommandInteraction, CacheType } from "discord.js";
 import { DevListener } from "../Listeners/DevListener";
 import BaseCommand from "../Utils/BaseCommand";
 
 export default class Dev extends BaseCommand {
   name = "dev";
-
-  builder(): RESTPostAPIApplicationCommandsJSONBody {
-    return this.command()
-      .setDescription("Changes bot configuration right away using interactive chat mode!")
-      .toJSON();
-  }
+  description = "Changes bot configuration right away using interactive chat mode!";
 
   handler(action: ChatInputCommandInteraction<CacheType>): void {
     if (!action.guild) return;
@@ -28,7 +19,7 @@ export default class Dev extends BaseCommand {
     devListener.afterHook<string>(true, action.user.id);
 
     action.reply(
-      "Development Mode: Interactive Mode Enabled. I will listening to message with prefix 'Artisan:'."
+      "DevTools: Interactive Mode Enabled. I will listening to message with prefix 'Artisan:'. Exit anytime with 'Artisan:Exit'"
     );
   }
 }

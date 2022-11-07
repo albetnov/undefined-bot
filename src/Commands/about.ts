@@ -1,20 +1,20 @@
 import {
   AttachmentBuilder,
+  CacheType,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  SlashCommandBuilder,
 } from "discord.js";
+import BaseCommand from "../Utils/BaseCommand";
 
-export const aboutSchema = new SlashCommandBuilder()
-  .setName("about")
-  .setDescription("What is me?")
-  .toJSON();
+export default class About extends BaseCommand {
+  name = "about";
+  description = "What is me?";
 
-export default (action: ChatInputCommandInteraction) => {
-  const gambarAyang = new AttachmentBuilder("./assets/ayang.jpeg");
+  handler(action: ChatInputCommandInteraction<CacheType>): void {
+    const gambarAyang = new AttachmentBuilder("./assets/ayang.jpeg");
 
-  const ayang = new EmbedBuilder().setTitle("🤍").setImage("attachment://ayang.jpeg")
-    .setDescription(`
+    const ayang = new EmbedBuilder().setTitle("🤍").setImage("attachment://ayang.jpeg")
+      .setDescription(`
     Artisan: A Assistant for Artisans
     v0.1 (State: Development)
 
@@ -25,8 +25,9 @@ export default (action: ChatInputCommandInteraction) => {
     Written by: AlbetNov
     `);
 
-  action.reply({
-    embeds: [ayang],
-    files: [gambarAyang],
-  });
-};
+    action.reply({
+      embeds: [ayang],
+      files: [gambarAyang],
+    });
+  }
+}

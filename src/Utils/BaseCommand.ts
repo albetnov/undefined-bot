@@ -6,11 +6,14 @@ import {
 
 export default abstract class BaseCommand {
   abstract name: string;
+  abstract description: string;
 
   command() {
-    return new SlashCommandBuilder().setName(this.name);
+    return new SlashCommandBuilder().setName(this.name).setDescription(this.description);
   }
 
   abstract handler(action: ChatInputCommandInteraction): void;
-  abstract builder(): RESTPostAPIApplicationCommandsJSONBody;
+  builder(): RESTPostAPIApplicationCommandsJSONBody {
+    return this.command().toJSON();
+  }
 }

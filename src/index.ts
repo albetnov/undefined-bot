@@ -55,6 +55,11 @@ client.on("messageCreate", (message) => {
       if (args.toLowerCase() === item.name.toLocaleLowerCase()) {
         item.handler(parameters, client, message);
       }
+
+      if (args.toLowerCase() === "exit") {
+        item.listener.listen = false;
+        message.channel.send("Interactive Mode End.");
+      }
     }
   });
 });
