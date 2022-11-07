@@ -33,4 +33,26 @@ export default async function flutter(client: Client) {
 
     channel.send({ embeds: [embeds] });
   });
+
+  scheduleJob(new Date(2022, 10, 7, 23, 10, 0), () => {
+    const embeds = new EmbedBuilder()
+      .setTitle("Your Updates: First.")
+      .setDescription(
+        `
+      @everyone,
+      I will not remind daily. The author do plan to make a daily reminder, for weeks percentage.
+      But the author still developing me. So until then, you can wait.
+      
+      Back to topic. I hope that you can targeting until this:
+      ${hyperlink("List & Mapping", "https://youtu.be/Jy4elW9Y64M")}
+
+      ------------------------------------------------------------
+
+      That's all from me, you may enjoy your activities.
+      `
+      )
+      .setImage("https://i.pinimg.com/564x/ee/fe/5f/eefe5f009c7105b18b8df4d86f907ce3.jpg");
+
+    channel.send({ embeds: [embeds] });
+  });
 }
