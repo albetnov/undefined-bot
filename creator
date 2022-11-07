@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+const yargs = require("yargs/yargs");
+const { hideBin } = require("yargs/helpers");
+const fs = require("fs");
+
+yargs(hideBin(process.argv))
+  .command(
+    "create:boot [file]",
+    "Generate ready to use boot template file.",
+    (yargs) =>
+      yargs
+        .positional("file", {
+          describe: "File name to generate.",
+        })
+        .demandOption(),
+    (argv) => {
+        fs.writeFileSync()
+    }
+  )
+  .parse();
