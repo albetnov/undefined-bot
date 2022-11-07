@@ -26,7 +26,7 @@ export class DevListener extends BaseListener<string> {
     const lookForNumber = parameters[0].match(/\d/g);
 
     if (!lookForNumber) {
-      response.channel.send({ content: "Channel ID invalid!" });
+      response.channel.send({ content: "Channel is invalid!" });
       return;
     }
 
