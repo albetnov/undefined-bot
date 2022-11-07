@@ -7,7 +7,7 @@ export const ListenerProps = {
   listen: false,
 };
 
-export class DevListener extends BaseListener<string> {
+export class DevListener extends BaseListener<string, Message> {
   name = "SetFlutterChannel";
   listener = ListenerProps;
 

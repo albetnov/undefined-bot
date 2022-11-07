@@ -4,18 +4,63 @@ const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 const fs = require("fs");
 
+const pathResolver = (path, name) => {
+  return `${__dirname}/src/${path}/${name}.ts`;
+};
+
+const checkForArgv = (argv, path) => {
+  const loc = pathResolver(path, argv.file);
+  if (!argv.file || argv.file.trim() === "") {
+    console.log("invalid");
+    return false;
+  } else if (fs.existsSync(loc)) {
+    console.log("File already exist.");
+    return false;
+  }
+  return loc;
+};
+
+const basicBuilder = (command, name) => [
+  `${command} [file]`,
+  `Generate ready to use ${name} [file]`,
+  (yargs) =>
+    yargs.positional("file", {
+      describe: "File name to generate.",
+      demandOption: true,
+    }),
+];
+const fileCreated = (path) => {
+  console.log(`File Created: ${path}`);
+};
+
 yargs(hideBin(process.argv))
-  .command(
-    "create:boot [file]",
-    "Generate ready to use boot template file.",
-    (yargs) =>
-      yargs
-        .positional("file", {
-          describe: "File name to generate.",
-        })
-        .demandOption(),
-    (argv) => {
-        fs.writeFileSync()
-    }
-  )
+  .describe("Basic Utility to help you generating file")
+  .command(...basicBuilder("create:boot"), (argv) => {
+    const path = checkForArgv(argv, "Boot");
+    if (!path) return;
+    const contents = `import {Client} from "discord.js";\n\nexport default async function ${argv.file}(client: Client) {\n\t// code\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
+  .command(...basicBuilder("create:command"), (argv) => {
+    const path = checkForArgv(argv, "Commands");
+    if (!path) return;
+    const contents = `import { ChatInputCommandInteraction } from "discord.js";\nimport BaseCommand from "../Utils/BaseCommand";\n\nexport default class ${argv.file} extends BaseCommand {\n\tname="";\n\tdescription="";\n\n\tconstructor() {\n\t\tsuper();\n\t\tthis.handler = this.handler.bind(this);\n\t}\n\n\tbuilder() {}\n\n\thandler(action: ChatInputCommandInteraction) {}\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
+  .command(...basicBuilder("create:event"), (argv) => {
+    const path = checkForArgv(argv, "Events");
+    if (!path) return;
+    const contents = `import { Events } from "discord.js";\nimport BaseEvent, { ActionInterface } from "../Utils/BaseEvent";\n\nexport default class ${argv.file} extends BaseEvent<T> {\n\ttype: string = Events.EventType;\n\n\thandler({ action, client }: ActionInterface<T>) {}\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
+  .command(...basicBuilder("create:listener"), (argv) => {
+    const path = checkForArgv(argv, "Listeners");
+    if (!path) return;
+    const contents = `import { Client } from "discord.js";\nimport BaseListener from "../Utils/BaseListener";\n\nexport const ListenerProps = {\n\tdata: "",\n\tlisten: false\n};\n\nexport class ${argv.file} extends BaseListener<T> {\n\tname = "";\n\tlistener = ListenerProps;\n\n\tafterHook<T>(listen: boolean, data: T) {\n\tif(typeof data !== "string") return;\n\tthis.listener.listen = listen;\n\tthis.listener.data = data;\n\t}\n\n\thandler(parameters: string[], client: Client, response: T) {}\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
   .parse();
