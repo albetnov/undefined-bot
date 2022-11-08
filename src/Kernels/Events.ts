@@ -1,4 +1,5 @@
 import GuildMemberAdd from "../Events/GuildMemberAdd";
+import GuildMemberRemove from "../Events/GuildMemberRemove";
 import InteractionCreate from "../Events/InteractionCreate";
 import MessageCreate from "../Events/MessageCreate";
 import Ready from "../Events/Ready";
@@ -10,6 +11,7 @@ const Events: BaseEvent<any>[] = [
   new InteractionCreate(),
   new MessageCreate(),
   new GuildMemberAdd(),
+  new GuildMemberRemove(),
 ];
 
 export default Events;

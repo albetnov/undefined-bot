@@ -59,7 +59,7 @@ yargs(hideBin(process.argv))
   .command(...basicBuilder("create:listener"), (argv) => {
     const path = checkForArgv(argv, "Listeners");
     if (!path) return;
-    const contents = `import { Client } from "discord.js";\nimport BaseListener from "../Utils/BaseListener";\n\nexport const ListenerProps = {\n\tdata: "",\n\tlisten: false\n};\n\nexport class ${argv.file} extends BaseListener<T> {\n\tname = "";\n\tlistener = ListenerProps;\n\n\tafterHook<T>(listen: boolean, data: T) {\n\tif(typeof data !== "string") return;\n\tthis.listener.listen = listen;\n\tthis.listener.data = data;\n\t}\n\n\thandler(parameters: string[], client: Client, response: T) {}\n}`;
+    const contents = `import BaseListener, { HandlerProps } from "../Utils/BaseListener";\n\nexport class ${argv.file} extends BaseListener {\n\tname = "${argv.file}";\n\n\thandler({ parameters, client, response }: HandlerProps) {}\n}`;
     fs.writeFileSync(path, contents);
     fileCreated(path);
   })

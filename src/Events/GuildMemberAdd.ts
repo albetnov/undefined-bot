@@ -28,6 +28,7 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
       .setTitle(`Welcome to ${this.SERVER_NAME}!`)
       .setDescription(
         `
+
       Hi, Nice to meet you! Let me introduce my self.
       I am Artisan. A Assitance to help you develop your Software's Artisans.
 
@@ -40,9 +41,10 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
       Before step forwards though, I need you to get into {#RULESCHANNEL PLACEHOLDER}.
 
       That's all folks. See you at the server.
+
     `
       )
-      .setImage("https://giphy.com/clips/netflix-tick-boom-EIPoqWcdqYrF1qIos7")
+      .setImage("https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif")
       .setFooter({
         iconURL:
           client.user?.avatarURL() ||

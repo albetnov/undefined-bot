@@ -27,6 +27,9 @@ export default class About extends BaseCommand {
         
         Built on top of Discord.JS with NodeJS.
         Written by: AlbetNov
+
+        Contributors:
+        - Atnan (testers)
         `
       );
 

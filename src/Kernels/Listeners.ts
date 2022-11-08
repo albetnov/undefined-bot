@@ -1,4 +1,11 @@
 import { DevCommand } from "../Listeners/DevCommand";
-import { DevListener } from "../Listeners/DevListener";
+import { SetByeChannel } from "../Listeners/SetByeChannel";
+import { SetFlutterChannel } from "../Listeners/SetFlutterChannel";
+import { SetWelcomeChannel } from "../Listeners/SetWelcomeChannel";
 
-export default [new DevListener(), new DevCommand()];
+export default [
+  new SetFlutterChannel(),
+  new DevCommand(),
+  new SetWelcomeChannel(),
+  new SetByeChannel(),
+];

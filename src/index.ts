@@ -17,6 +17,7 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.GuildPresences,
   ],
 });
 const rest = new REST({ version: "10" }).setToken(env("TOKEN"));

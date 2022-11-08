@@ -1,4 +1,4 @@
-import { Client } from "discord.js";
+import { Client, Message } from "discord.js";
 
 export const ListenerProps = {
   listen: false,
@@ -10,18 +10,18 @@ export const afterHook = (listen: boolean, user: string) => {
   ListenerProps.user = user;
 };
 
-export interface HandlerProps<T> {
+export interface HandlerProps {
   parameters: string[];
   client: Client;
-  response: T;
+  response: Message;
 }
 
-export default abstract class BaseListener<T> {
+export default abstract class BaseListener {
   abstract name: string;
 
   constructor() {
     this.handler = this.handler.bind(this);
   }
 
-  abstract handler(handler: HandlerProps<T>): void;
+  abstract handler(handler: HandlerProps): void;
 }
