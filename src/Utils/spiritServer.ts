@@ -42,4 +42,11 @@ export const imgUrl = [
   "https://i.pinimg.com/564x/9e/03/da/9e03daca869b0378aa1decb0728f9c63.jpg",
   "https://i.pinimg.com/564x/dc/f0/9d/dcf09df0329ef23ad0fbb2e8f8028e73.jpg",
   "https://i.pinimg.com/564x/fb/01/6f/fb016fb30ec593565b5b29d2039c2ffa.jpg",
+  "https://i.pinimg.com/564x/03/c7/24/03c724a1eea9accafda35f0e158e4914.jpg",
+  "https://i.pinimg.com/564x/ea/ae/4e/eaae4e493f085220fa4b62664eb42988.jpg",
+  "https://i.pinimg.com/564x/a5/5b/d6/a55bd6a54a5333a554dd03889d036e25.jpg",
+  "https://i.pinimg.com/564x/40/d3/1f/40d31f2fc0751b19ed9ef07e0937b6a0.jpg",
+  "https://i.pinimg.com/564x/1d/e2/8d/1de28d86a3c2986bd2bf63622c7e0fd0.jpg",
+  "https://i.pinimg.com/564x/e1/88/43/e18843f5078f0f1ee70988febc3175ef.jpg",
+  "https://i.pinimg.com/564x/1c/f5/9f/1cf59fe2baa18476dff7b713f22ef9f0.jpg",
 ];

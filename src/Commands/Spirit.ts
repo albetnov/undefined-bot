@@ -20,7 +20,7 @@ export default class Spirit extends BaseCommand {
   embeds(user: User | null) {
     const image = this.random(imgUrl);
 
-    let quote = "Random Picture of me to help you gain spirit!";
+    let quote = "Random Picture from me to help you gain spirit!";
 
     switch (image) {
       case "https://i.pinimg.com/564x/4d/1e/90/4d1e908fd00ac33ad02e20cfce13e370.jpg":

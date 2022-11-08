@@ -11,7 +11,7 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
       .setColor("Blue")
       .setTitle(`Welcome ${member.displayName}!`)
       .setDescription(
-        `Welcome to ${this.SERVER_NAME}. Please read the rules I DM to you carefully!`
+        `Welcome to ${this.SERVER_NAME}. Please read the message I sent to you carefully!`
       )
       .setImage(member.avatarURL() || "https://media.giphy.com/media/XD9o33QG9BoMis7iM4/giphy.gif")
       .setFooter({
@@ -23,6 +23,9 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
   }
 
   private dmEmbed(client: Client) {
+    const rules =
+      client.channels.cache.get(env("RULES_CHANNEL_ID")) || "Rules Channel in Undefined Server.";
+
     return new EmbedBuilder()
       .setColor("Blue")
       .setTitle(`Welcome to ${this.SERVER_NAME}!`)
@@ -38,7 +41,7 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
       )} is a server for Software Artisan and wannabe.
       In this server, you will either guide or be guided to learn more about Software Development.
 
-      Before step forwards though, I need you to get into {#RULESCHANNEL PLACEHOLDER}.
+      Before step forwards though, I need you to get into ${rules}.
 
       That's all folks. See you at the server.
 

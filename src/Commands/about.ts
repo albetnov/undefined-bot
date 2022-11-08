@@ -19,7 +19,7 @@ export default class About extends BaseCommand {
       .setDescription(
         `
         Artisan: A Assistant for Artisans
-        v0.1 (State: Development)
+        v0.1 (State: Pre-Alpha Release)
 
         I will help you keep track of your roadmap. 
         Ensure you will become

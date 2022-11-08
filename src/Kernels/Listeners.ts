@@ -1,11 +1,11 @@
-import { DevCommand } from "../Listeners/DevCommand";
+import { CastRules } from "../Listeners/CastRules";
 import { SetByeChannel } from "../Listeners/SetByeChannel";
 import { SetFlutterChannel } from "../Listeners/SetFlutterChannel";
 import { SetWelcomeChannel } from "../Listeners/SetWelcomeChannel";
 
 export default [
   new SetFlutterChannel(),
-  new DevCommand(),
+  new CastRules(),
   new SetWelcomeChannel(),
   new SetByeChannel(),
 ];
