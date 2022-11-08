@@ -14,6 +14,8 @@ import env from "../Utils/env";
 const SET_NICKNAME_MODAL = "setNickNameModal";
 const NICKNAME_INPUT = "nickNameInput";
 
+const BLACKLIST = ["328840209955422208", "720439197680533505"];
+
 export default class InteractionCreate extends BaseEvent<Interaction> {
   type: string = Events.InteractionCreate;
 
@@ -41,12 +43,20 @@ export default class InteractionCreate extends BaseEvent<Interaction> {
       }
 
       if (iteraction.customId === DISAGREE_RULES) {
+        if (BLACKLIST.includes(iteraction.user.id)) {
+          iteraction.reply({ content: `KAMU ADMIN BGST ${iteraction.user}`, ephemeral: true });
+          return;
+        }
         iteraction.guild?.members.kick(iteraction.user.id, "For not accepting rules.");
       }
     }
 
     if (iteraction.isModalSubmit()) {
       if (iteraction.customId === SET_NICKNAME_MODAL) {
+        if (BLACKLIST.includes(iteraction.user.id)) {
+          iteraction.reply({ content: `KAMU ADMIN BGST ${iteraction.user}`, ephemeral: true });
+          return;
+        }
         iteraction.guild?.members.removeRole({
           role: env("STARTING_ROLE"),
           user: iteraction.user.id,
@@ -58,6 +68,7 @@ export default class InteractionCreate extends BaseEvent<Interaction> {
         iteraction.guild?.members.cache
           .get(iteraction.user.id)
           ?.setNickname(iteraction.fields.getTextInputValue(NICKNAME_INPUT));
+        iteraction.reply({ content: `Thanks for agreeing ${iteraction.user}.`, ephemeral: true });
       }
     }
 
