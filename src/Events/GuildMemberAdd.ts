@@ -41,7 +41,8 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
       )} is a server for Software Artisan and wannabe.
       In this server, you will either guide or be guided to learn more about Software Development.
 
-      Before step forwards though, I need you to get into ${rules}.
+      Before step forwards though, I need you to get into ${rules} and proceed to agree. By that, you can
+      then discover available channels.
 
       That's all folks. See you at the server.
 

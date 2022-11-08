@@ -1,4 +1,5 @@
 import About from "../Commands/About";
+import ClearMessage from "../Commands/ClearMessage";
 import Dev from "../Commands/Dev";
 import Ping from "../Commands/Ping";
 import Roadmap from "../Commands/Roadmap";
@@ -11,4 +12,5 @@ export default [
   KernelClassRegisterer(new Dev()),
   KernelClassRegisterer(new Ping()),
   KernelClassRegisterer(new About()),
+  KernelClassRegisterer(new ClearMessage()),
 ];
