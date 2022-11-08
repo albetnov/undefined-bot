@@ -1,12 +1,13 @@
 import { ChannelType, Client, EmbedBuilder, hyperlink } from "discord.js";
 import { gracefulShutdown, scheduleJob } from "node-schedule";
+import env from "../Utils/env";
 
 /** @WIP */
 export default async function flutter(client: Client) {
   console.log("Resetting All Jobs");
   await gracefulShutdown();
 
-  const channel = client.channels.cache.get(process.env.FLUTTER_CHANNEL_ID!);
+  const channel = client.channels.cache.get(env("FLUTTER_CHANNEL_ID"));
 
   if (!channel || channel.type !== ChannelType.GuildText) {
     console.log("incompitable channel found");

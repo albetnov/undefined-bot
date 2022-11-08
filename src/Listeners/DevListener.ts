@@ -1,23 +1,12 @@
-import { Client, Message } from "discord.js";
+import { Message } from "discord.js";
 import flutter from "../Boot/flutter";
-import BaseListener from "../Utils/BaseListener";
+import BaseListener, { HandlerProps } from "../Utils/BaseListener";
+import { setEnv } from "../Utils/env";
 
-export const ListenerProps = {
-  data: "",
-  listen: false,
-};
-
-export class DevListener extends BaseListener<string, Message> {
+export class DevListener extends BaseListener<Message> {
   name = "SetFlutterChannel";
-  listener = ListenerProps;
 
-  afterHook<T>(listen: boolean, data: T) {
-    if (typeof data !== "string") return;
-    this.listener.listen = listen;
-    this.listener.data = data;
-  }
-
-  handler(parameters: string[], client: Client, response: Message) {
+  handler({ parameters, client, response }: HandlerProps<Message>) {
     if (!parameters || parameters.length <= 0 || parameters[0].trim() === "") {
       response.channel.send("Channel ID is required!");
       return;
@@ -39,7 +28,7 @@ export class DevListener extends BaseListener<string, Message> {
       return;
     }
 
-    process.env.FLUTTER_CHANNEL_ID = parsed;
+    setEnv("FLUTTER_CHANNEL_ID", parsed);
     flutter(client);
     response.channel.send({
       content: `Flutter channel has been set to ${channel?.toString()}`,

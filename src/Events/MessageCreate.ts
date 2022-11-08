@@ -1,17 +1,18 @@
 import { Events, Message } from "discord.js";
 import Listeners from "../Kernels/Listeners";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
+import { ListenerProps } from "../Utils/BaseListener";
 
 export default class MessageCreate extends BaseEvent<Message> {
   type: string = Events.MessageCreate;
 
   handler({ action: message, client }: ActionInterface<Message>) {
     Listeners.forEach((item) => {
-      if (item.listener.listen) {
+      if (ListenerProps.listen) {
         if (
           !message.content ||
           !message.content.startsWith("Artisan:") ||
-          message.author.id !== item.listener.data
+          message.author.id !== ListenerProps.user
         )
           return;
 
@@ -24,13 +25,13 @@ export default class MessageCreate extends BaseEvent<Message> {
           parameters.shift();
         }
 
-        if (args.toLowerCase() === item.name.toLocaleLowerCase()) {
+        if (args.toLowerCase() === item.name.toLowerCase()) {
           if (!client) return;
-          item.handler(parameters, client, message);
+          item.handler({ parameters, client, response: message });
         }
 
         if (args.toLowerCase() === "exit") {
-          item.listener.listen = false;
+          ListenerProps.listen = false;
           message.channel.send("Interactive Mode End.");
         }
       }

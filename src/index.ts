@@ -8,15 +8,18 @@ config();
 import { Client, Routes, REST, GatewayIntentBits } from "discord.js";
 import Commands from "./Kernels/Commands";
 import Events from "./Kernels/Events";
+import env from "./Utils/env";
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.DirectMessages,
   ],
 });
-const rest = new REST({ version: "10" }).setToken(process.env.TOKEN!);
+const rest = new REST({ version: "10" }).setToken(env("TOKEN"));
 
 Events.forEach((item) => {
   client.on(item.type, (action) => item.handler({ action, client }));
@@ -24,12 +27,12 @@ Events.forEach((item) => {
 
 async function main() {
   try {
-    await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!), {
+    await rest.put(Routes.applicationGuildCommands(env("CLIENT_ID"), env("GUILD_ID")), {
       body: Commands.map((item) => {
         return item.schema;
       }),
     });
-    client.login(process.env.TOKEN);
+    client.login(env("TOKEN"));
   } catch (err) {
     console.error(err);
   }
