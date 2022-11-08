@@ -4,6 +4,7 @@ import Dev from "../Commands/Dev";
 import Ping from "../Commands/Ping";
 import Roadmap from "../Commands/Roadmap";
 import Spirit from "../Commands/Spirit";
+import YouBadBad from "../Commands/YouBadBad";
 import KernelClassRegisterer from "../Utils/KernelClassRegisterer";
 
 export default [
@@ -13,4 +14,5 @@ export default [
   KernelClassRegisterer(new Ping()),
   KernelClassRegisterer(new About()),
   KernelClassRegisterer(new ClearMessage()),
+  KernelClassRegisterer(new YouBadBad()),
 ];

@@ -14,6 +14,8 @@ export default async function flutter(client: Client) {
     return;
   }
 
+  const PHOTO = "https://i.pinimg.com/564x/ee/fe/5f/eefe5f009c7105b18b8df4d86f907ce3.jpg";
+
   scheduleJob(new Date(2022, 10, 6, 21, 48, 0), () => {
     const embeds = new EmbedBuilder()
       .setTitle("Flutter Roadmap, Begin!")
@@ -30,7 +32,7 @@ export default async function flutter(client: Client) {
       That's all from me, meet again at your week's 4. Shall we?
       `
       )
-      .setImage("https://i.pinimg.com/564x/ee/fe/5f/eefe5f009c7105b18b8df4d86f907ce3.jpg");
+      .setImage(PHOTO);
 
     channel.send({ embeds: [embeds] });
   });
@@ -52,8 +54,25 @@ export default async function flutter(client: Client) {
       That's all from me, you may enjoy your activities.
       `
       )
-      .setImage("https://i.pinimg.com/564x/ee/fe/5f/eefe5f009c7105b18b8df4d86f907ce3.jpg");
+      .setImage(PHOTO);
 
+    channel.send({ embeds: [embeds] });
+  });
+
+  scheduleJob(new Date(2022, 10, 8, 20, 0, 0), () => {
+    const embeds = new EmbedBuilder()
+      .setTitle("Your Updates: Second.")
+      .setDescription(
+        `
+      @everyone,
+
+      I hope you all at least achieving 
+      ${hyperlink("Upgrade Your Monster with Mixins.", "https://youtu.be/jKb3_EuJaRE")}
+      
+      That's all.
+      `
+      )
+      .setImage(PHOTO);
     channel.send({ embeds: [embeds] });
   });
 }
