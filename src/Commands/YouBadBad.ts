@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, User } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
-import random from "../Utils/random";
-import YouBadBadImgUrl from "../Utils/youBadBadServer";
+import axios from "axios";
+import env from "../Utils/env";
 
 export default class YouBadBad extends BaseCommand {
   name = "badbad";
@@ -21,15 +21,25 @@ export default class YouBadBad extends BaseCommand {
       .toJSON();
   }
 
-  private embed(user: User, sent: User) {
+  private async giphy() {
+    const res = await axios.get("https://api.giphy.com/v1/gifs/random", {
+      params: {
+        api_key: env("GIPHY_API_INTEGRATION"),
+        tag: "anime slap",
+      },
+    });
+    return res.data.data.images.original.url;
+  }
+
+  private async embed(user: User, sent: User) {
     return new EmbedBuilder()
       .setTitle("You bad bad")
       .setDescription(`${sent} say you bad bad ${user}, haiya...`)
-      .setImage(random(YouBadBadImgUrl))
+      .setImage(await this.giphy())
       .setFooter({ text: "Dont be a bad guy again alright?" });
   }
 
-  handler(action: ChatInputCommandInteraction) {
+  async handler(action: ChatInputCommandInteraction) {
     const user = action.options.getUser(this.BAD_USER);
 
     if (!user) {
@@ -37,6 +47,6 @@ export default class YouBadBad extends BaseCommand {
       return;
     }
 
-    action.reply({ embeds: [this.embed(user, action.user)] });
+    action.reply({ embeds: [await this.embed(user, action.user)] });
   }
 }
