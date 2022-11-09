@@ -14,8 +14,6 @@ import env from "../Utils/env";
 const SET_NICKNAME_MODAL = "setNickNameModal";
 const NICKNAME_INPUT = "nickNameInput";
 
-const BLACKLIST = ["328840209955422208", "720439197680533505"];
-
 export default class InteractionCreate extends BaseEvent<Interaction> {
   type: string = Events.InteractionCreate;
 
@@ -43,7 +41,7 @@ export default class InteractionCreate extends BaseEvent<Interaction> {
       }
 
       if (iteraction.customId === DISAGREE_RULES) {
-        if (BLACKLIST.includes(iteraction.user.id)) {
+        if (iteraction.memberPermissions?.has("Administrator")) {
           iteraction.reply({ content: `KAMU ADMIN BGST ${iteraction.user}`, ephemeral: true });
           return;
         }
@@ -53,7 +51,7 @@ export default class InteractionCreate extends BaseEvent<Interaction> {
 
     if (iteraction.isModalSubmit()) {
       if (iteraction.customId === SET_NICKNAME_MODAL) {
-        if (BLACKLIST.includes(iteraction.user.id)) {
+        if (iteraction.memberPermissions?.has("Administrator")) {
           iteraction.reply({ content: `KAMU ADMIN BGST ${iteraction.user}`, ephemeral: true });
           return;
         }
