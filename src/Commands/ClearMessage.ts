@@ -37,10 +37,6 @@ export default class ClearMessage extends BaseCommand {
     collector?.on("collect", async (collected) => {
       const clear = collected.content === "yes" ? true : false;
       if (clear) {
-        collected.reply({ content: "Clearing Channel", options: { ephemeral: true } });
-
-        await setTimeout(1000);
-
         if (action.channel?.type !== ChannelType.GuildText) {
           collected.reply({
             content: "Incompitable channel type: Channel Must Text Based.",
@@ -48,6 +44,10 @@ export default class ClearMessage extends BaseCommand {
           });
           return;
         }
+
+        collected.reply({ content: "Clearing Channel", options: { ephemeral: true } });
+
+        await setTimeout(1000);
 
         let fetched;
 
