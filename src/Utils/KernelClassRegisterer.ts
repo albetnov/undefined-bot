@@ -1,4 +1,11 @@
+import { ChatInputCommandInteraction, RESTPostAPIApplicationCommandsJSONBody } from "discord.js";
 import BaseCommand from "./BaseCommand";
+
+export interface CommandSchema {
+  handler: (action: ChatInputCommandInteraction) => void;
+  schema: RESTPostAPIApplicationCommandsJSONBody;
+  name: string;
+}
 
 /**
  * An object builder for new commands (Class Based)

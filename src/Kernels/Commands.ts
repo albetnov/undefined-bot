@@ -5,9 +5,9 @@ import Ping from "../Commands/Ping";
 import Roadmap from "../Commands/Roadmap";
 import Spirit from "../Commands/Spirit";
 import YouBadBad from "../Commands/YouBadBad";
-import KernelClassRegisterer from "../Utils/KernelClassRegisterer";
+import KernelClassRegisterer, { CommandSchema } from "../Utils/KernelClassRegisterer";
 
-export default [
+const loader: CommandSchema[] = [
   KernelClassRegisterer(new Spirit()),
   KernelClassRegisterer(new Roadmap()),
   KernelClassRegisterer(new Dev()),
@@ -16,3 +16,5 @@ export default [
   KernelClassRegisterer(new ClearMessage()),
   KernelClassRegisterer(new YouBadBad()),
 ];
+
+export default loader;

@@ -55,6 +55,7 @@ export default class ClearMessage extends BaseCommand {
           fetched = await action.channel?.messages.fetch({ limit: 100 });
           action.channel.bulkDelete(fetched);
         } while (fetched.size >= 2);
+        return;
       }
 
       action.followUp({ content: "You said no: Aborting.", ephemeral: true });

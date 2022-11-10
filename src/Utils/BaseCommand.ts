@@ -8,7 +8,7 @@ export default abstract class BaseCommand {
   abstract name: string;
   abstract description: string;
 
-  command() {
+  protected command() {
     return new SlashCommandBuilder().setName(this.name).setDescription(this.description);
   }
 
