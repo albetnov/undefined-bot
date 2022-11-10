@@ -99,11 +99,13 @@ yargs(hideBin(process.argv))
 
       archive.pipe(output);
 
-      // append files from a sub-directory, putting its contents at the root of archive
+      // append directory
       archive.directory(__dirname + "/dist", false);
 
-      // append files from a sub-directory and naming it `new-subdir` within the archive
-      // archive.directory("subdir/", "new-subdir");
+      // update files from root.
+      archive.file(".env", fs.readFileSync(__dirname + "/.env"));
+      archive.file("package.json", fs.readFileSync(__dirname + "/package.json"));
+      archive.directory(__dirname + "/assets", "assets/");
 
       archive.finalize();
     },
