@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
-import Kernel, { loadKernel } from "./Roadmap/Kernel";
+import { doc, DocumentData, getDoc } from "firebase/firestore";
+import { db } from "..";
 
 export default class Roadmap extends BaseCommand {
   name = "roadmap";
@@ -19,14 +20,39 @@ export default class Roadmap extends BaseCommand {
           .setName(this.LANGUAGE)
           .setDescription("Choose language to shown roadmap")
           .setRequired(true)
-          .addChoices(...Kernel.map((item) => ({ name: item.name, value: item.name })))
       )
       .toJSON();
   }
 
-  handler(action: ChatInputCommandInteraction): void {
-    const lang = action.options.getString(this.LANGUAGE);
+  private embed(data: DocumentData) {
+    return new EmbedBuilder()
+      .setColor("Blue")
+      .setTitle(data.title)
+      .setAuthor({
+        name: data.author_name,
+        url: data.author_url,
+      })
+      .setImage(data.image)
+      .setDescription(data.content)
+      .setFooter({ text: data.footer });
+  }
 
-    loadKernel(lang, action);
+  async handler(action: ChatInputCommandInteraction) {
+    const language = action.options.getString(this.LANGUAGE);
+
+    if (!language) {
+      action.reply("Language Parameter not specified");
+      return;
+    }
+
+    const docRef = doc(db, "roadmap", language);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      action.reply(`Ups, ${language} not exist.`);
+      return;
+    }
+
+    action.reply({ embeds: [this.embed(docSnap.data())] });
   }
 }

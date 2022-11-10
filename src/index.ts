@@ -5,10 +5,27 @@
 process.env.TZ = "Asia/Jakarta";
 import { config } from "dotenv";
 config();
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import env from "./Utils/env";
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: env("FIREBASE_API_INTEGRATION"),
+  authDomain: env("FIREBASE_URL"),
+  projectId: env("FIREBASE_APP_NAME"),
+  storageBucket: env("FIREBASE_BUCKET"),
+  messagingSenderId: env("FIREBASE_SENDER_ID"),
+  appId: env("FIREBASE_APP_ID"),
+};
+
+const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore(app);
+
 import { Client, Routes, REST, GatewayIntentBits } from "discord.js";
 import Commands from "./Kernels/Commands";
 import Events from "./Kernels/Events";
-import env from "./Utils/env";
 
 const client = new Client({
   intents: [
