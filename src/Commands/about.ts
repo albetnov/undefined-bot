@@ -5,6 +5,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
+import env from "../Utils/env";
 
 export default class About extends BaseCommand {
   name = "about";
@@ -19,7 +20,7 @@ export default class About extends BaseCommand {
       .setDescription(
         `
         Artisan: A Assistant for Artisans
-        v0.3 (State: Pre-Alpha Release)
+        v${env("APP_VERSION", "0.1")} (State: Pre-Alpha Release)
 
         I will help you keep track of your roadmap. 
         Ensure you will become

@@ -9,7 +9,8 @@
     "init:config": "tsc --init",
     "start": "nodemon",
     "dev:delete": "ts-node ./src/Utils/clear.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "creator": "node creator"
   },
   "dependencies": {
     "axios": "^1.1.3",

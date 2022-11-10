@@ -22,7 +22,7 @@ const checkForArgv = (argv, path) => {
 
 const basicBuilder = (command, name) => [
   `${command} [file]`,
-  `Generate ready to use ${name} [file]`,
+  `Generate ready to use ${name} template file.`,
   (yargs) =>
     yargs.positional("file", {
       describe: "File name to generate.",
@@ -35,31 +35,45 @@ const fileCreated = (path) => {
 
 yargs(hideBin(process.argv))
   .describe("Basic Utility to help you generating file")
-  .command(...basicBuilder("create:boot"), (argv) => {
+  .command(...basicBuilder("create:boot", "Boot"), (argv) => {
     const path = checkForArgv(argv, "Boot");
     if (!path) return;
     const contents = `import {Client} from "discord.js";\n\nexport default async function ${argv.file}(client: Client) {\n\t// code\n}`;
     fs.writeFileSync(path, contents);
     fileCreated(path);
   })
-  .command(...basicBuilder("create:command"), (argv) => {
+  .command(...basicBuilder("create:command", "Command"), (argv) => {
     const path = checkForArgv(argv, "Commands");
     if (!path) return;
     const contents = `import { ChatInputCommandInteraction } from "discord.js";\nimport BaseCommand from "../Utils/BaseCommand";\n\nexport default class ${argv.file} extends BaseCommand {\n\tname="";\n\tdescription="";\n\n\tconstructor() {\n\t\tsuper();\n\t\tthis.handler = this.handler.bind(this);\n\t}\n\n\tbuilder() {}\n\n\thandler(action: ChatInputCommandInteraction) {}\n}`;
     fs.writeFileSync(path, contents);
     fileCreated(path);
   })
-  .command(...basicBuilder("create:event"), (argv) => {
+  .command(...basicBuilder("create:event", "Event"), (argv) => {
     const path = checkForArgv(argv, "Events");
     if (!path) return;
     const contents = `import { Events } from "discord.js";\nimport BaseEvent, { ActionInterface } from "../Utils/BaseEvent";\n\nexport default class ${argv.file} extends BaseEvent<T> {\n\ttype: string = Events.EventType;\n\n\thandler({ action, client }: ActionInterface<T>) {}\n}`;
     fs.writeFileSync(path, contents);
     fileCreated(path);
   })
-  .command(...basicBuilder("create:listener"), (argv) => {
+  .command(...basicBuilder("create:listener", "Listener"), (argv) => {
     const path = checkForArgv(argv, "Listeners");
     if (!path) return;
     const contents = `import BaseListener, { HandlerProps } from "../Utils/BaseListener";\n\nexport class ${argv.file} extends BaseListener {\n\tname = "${argv.file}";\n\n\thandler({ parameters, client, response }: HandlerProps) {}\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
+  .command(...basicBuilder("create:button", "Button"), (argv) => {
+    const path = checkForArgv(argv, "Interactions/Buttons");
+    if (!path) return;
+    const contents = `import { ButtonInteraction } from "discord.js";\nimport BaseButton from "../../Utils/BaseButton";\n\nexport default class ${argv.file} extends BaseButton {\n\tcustomId = "${argv.file}";\n\n\thandler(interaction: ButtonInteraction) {}\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
+  .command(...basicBuilder("create:modal", "Modal"), (argv) => {
+    const path = checkForArgv(argv, "Interactions/Modals");
+    if (!path) return;
+    const contents = `import { ModalBuilder, ModalSubmitInteraction, CacheType } from "discord.js"\nimport BaseModal from "../../Utils/BaseModal";\n\nexport default class ${argv.file} extends BaseModal {\n\tcustomId = "${argv.file}";\n\n\tbuilder(builder: ModalBuilder) {}\n\n\thandler(interaction: ModalSubmitInteraction<CacheType>): void {}\n}`;
     fs.writeFileSync(path, contents);
     fileCreated(path);
   })
