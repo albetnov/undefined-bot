@@ -3,6 +3,8 @@
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 const fs = require("fs");
+const { execSync } = require("child_process");
+const archiver = require("archiver");
 
 const pathResolver = (path, name) => {
   return `${__dirname}/src/${path}/${name}.ts`;
@@ -76,5 +78,34 @@ yargs(hideBin(process.argv))
     const contents = `import { ModalBuilder, ModalSubmitInteraction, CacheType } from "discord.js"\nimport BaseModal from "../../Utils/BaseModal";\n\nexport default class ${argv.file} extends BaseModal {\n\tcustomId = "${argv.file}";\n\n\tbuilder(builder: ModalBuilder) {}\n\n\thandler(interaction: ModalSubmitInteraction<CacheType>): void {}\n}`;
     fs.writeFileSync(path, contents);
     fileCreated(path);
+  })
+  .command({
+    command: "create:deploy",
+    description: "Build and create ready to deploy zip file",
+    async handler(argv) {
+      execSync("tsc");
+
+      const output = fs.createWriteStream("deploy.zip");
+      const archive = archiver("zip");
+
+      output.on("close", function () {
+        console.log("Writed Stream: " + archive.pointer() + " total bytes");
+        console.log("Done.");
+      });
+
+      archive.on("error", function (err) {
+        throw err;
+      });
+
+      archive.pipe(output);
+
+      // append files from a sub-directory, putting its contents at the root of archive
+      archive.directory(__dirname + "/dist", false);
+
+      // append files from a sub-directory and naming it `new-subdir` within the archive
+      // archive.directory("subdir/", "new-subdir");
+
+      archive.finalize();
+    },
   })
   .parse();
