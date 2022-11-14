@@ -5,6 +5,8 @@ import {
   ChannelType,
   EmbedBuilder,
 } from "discord.js";
+import { DocumentData, QuerySnapshot } from "firebase/firestore";
+import getRules from "../Repositories/GetRules";
 import BaseListener, { HandlerProps } from "../Utils/BaseListener";
 import env from "../Utils/env";
 
@@ -14,7 +16,12 @@ export const DISAGREE_RULES = "disagreeRules";
 export class CastRules extends BaseListener {
   name = "CastRules";
 
-  private embeds() {
+  private embeds(rules: QuerySnapshot<DocumentData>) {
+    const fields = rules.docs.map((item: DocumentData) => {
+      const data = item.data();
+      return { name: data.name, value: data.value };
+    });
+
     return new EmbedBuilder()
       .setColor("Yellow")
       .setAuthor({
@@ -25,17 +32,7 @@ export class CastRules extends BaseListener {
       .setDescription(
         `Hello and welcome to ${env("SERVER_NAME")}! Here's some rule you must follows:`
       )
-      .addFields(
-        { name: "No rude words.", value: "Dilarang bicara kasar yak." },
-        { name: "Respect each other", value: "Hormat sesama ygy" },
-        { name: "Fuck Seniority", value: "Jan belagu" },
-        {
-          name: "Agree to this rule and proceed setting nickname to real name",
-          value:
-            "Pake nama asli dong. Masa behind the text mulu :V (Let artisan bikin nickname kalian)",
-        },
-        { name: "Fuck to conflicts", value: "U conflict? U will not longer see this server." }
-      )
+      .addFields(...fields)
       .setImage("https://media.giphy.com/media/9JyTQrfpJs8zZ9xLI3/giphy.gif")
       .setFooter({
         text: "That's all. - Artisan",
@@ -58,14 +55,16 @@ export class CastRules extends BaseListener {
       );
   }
 
-  handler({ response }: HandlerProps) {
+  async handler({ response }: HandlerProps) {
     const channels = response.guild?.channels.cache.get(env("RULES_CHANNEL_ID"));
     if (!channels || channels.type !== ChannelType.GuildText) {
       console.log("incompitable channel");
       return;
     }
 
-    channels.send({ embeds: [this.embeds()], components: [this.buttons()] });
+    const rules = await getRules();
+
+    channels.send({ embeds: [this.embeds(rules)], components: [this.buttons()] });
 
     response.channel.send("Rules Channel Set Up Successfully.");
   }

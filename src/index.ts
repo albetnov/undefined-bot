@@ -7,6 +7,7 @@ import { config } from "dotenv";
 config();
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import env from "./Utils/env";
 
 // Initialize Firebase
@@ -23,9 +24,23 @@ const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 
+const auth = getAuth(app);
+
+async function login() {
+  const user = await signInWithEmailAndPassword(
+    auth,
+    env("FIREBASE_AUTH_EMAIL"),
+    env("FIREBASE_AUTH_PASSWORD")
+  );
+  console.log(user.user);
+}
+
+login();
+
 import { Client, Routes, REST, GatewayIntentBits } from "discord.js";
 import Commands from "./Kernels/Commands";
 import Events from "./Kernels/Events";
+import insertLog from "./Repositories/InsertLog";
 
 const client = new Client({
   intents: [
@@ -40,7 +55,13 @@ const client = new Client({
 const rest = new REST({ version: "10" }).setToken(env("TOKEN"));
 
 Events.forEach((item) => {
-  client.on(item.type, (action) => item.handler({ action, client }));
+  try {
+    client.on(item.type, (action) => {
+      item.handler({ action, client });
+    });
+  } catch (err: any) {
+    insertLog(err.message, err);
+  }
 });
 
 async function main() {
@@ -51,9 +72,16 @@ async function main() {
       }),
     });
     client.login(env("TOKEN"));
-  } catch (err) {
+  } catch (err: any) {
+    insertLog(err.message, err);
+
     console.error(err);
   }
 }
 
 main();
+
+process.on("unhandledRejection", (error: any) => {
+  insertLog(error.message, error);
+  console.error(error);
+});
