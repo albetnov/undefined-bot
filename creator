@@ -100,12 +100,14 @@ yargs(hideBin(process.argv))
       archive.pipe(output);
 
       // append directory
-      archive.directory(__dirname + "/dist", false);
+      archive.directory(__dirname + "/dist", "src/");
 
       // update files from root.
       archive.file(".env", fs.readFileSync(__dirname + "/.env"));
       archive.file("package.json", fs.readFileSync(__dirname + "/package.json"));
+      // archive.directory(__dirname + "src/Cache", "src/Cache/");
       archive.directory(__dirname + "/assets", "assets/");
+      archive.append(null, { name: "src/Cache/" });
 
       archive.finalize();
     },
