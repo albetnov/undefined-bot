@@ -19,7 +19,7 @@ export default async function flutter(client: Client) {
 
   const PHOTO = "https://i.pinimg.com/564x/ee/fe/5f/eefe5f009c7105b18b8df4d86f907ce3.jpg";
 
-  scheduleJob({ hour: 12 }, () => {
+  scheduleJob({ hour: 6, minute: 0, second: 0 }, () => {
     const embeds = new EmbedBuilder()
       .setTitle("Testing Cron Job")
       .setDescription(`I am still testing the cron job`)

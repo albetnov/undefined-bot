@@ -2,7 +2,6 @@
  * Is it important to set env for Timezone before dotenv load.
  * this environment applied so that server's timezone will sync with local.
  */
-process.env.TZ = "Asia/Jakarta";
 import { config } from "dotenv";
 config();
 import { initializeApp } from "firebase/app";
