@@ -7,7 +7,7 @@ import {
   TextInputStyle,
 } from "discord.js";
 import BaseModal from "../../Utils/BaseModal";
-import env from "../../Utils/env";
+import { getCacheByKey } from "../../Utils/GetCache";
 
 export default class AgreeModal extends BaseModal {
   customId = "setNickNameModal";
@@ -36,11 +36,11 @@ export default class AgreeModal extends BaseModal {
       return;
     }
     interaction.guild?.members.removeRole({
-      role: env("STARTING_ROLE"),
+      role: getCacheByKey("roles", "starting"),
       user: interaction.user.id,
     });
     interaction.guild?.members.addRole({
-      role: env("USER_ROLE"),
+      role: getCacheByKey("roles", "user"),
       user: interaction.user.id,
     });
     interaction.guild?.members.cache

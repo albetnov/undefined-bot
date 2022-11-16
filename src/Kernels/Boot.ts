@@ -1,6 +1,4 @@
-/** @WIP */
-
-import flutter from "../Boot/flutter";
+import refreshCache from "../Boot/refreshCache";
 import status from "../Boot/status";
 
-export default [flutter, status];
+export default [status, refreshCache];

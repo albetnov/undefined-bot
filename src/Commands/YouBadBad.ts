@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, EmbedBuilder, User } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
 import axios from "axios";
 import env from "../Utils/env";
+import { logger } from "..";
 
 export default class YouBadBad extends BaseCommand {
   name = "badbad";
@@ -43,7 +44,7 @@ export default class YouBadBad extends BaseCommand {
     const user = action.options.getUser(this.BAD_USER);
 
     if (!user) {
-      console.log("User invalid");
+      logger.error("User invalid");
       return;
     }
 

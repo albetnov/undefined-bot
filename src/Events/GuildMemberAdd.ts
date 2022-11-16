@@ -1,6 +1,7 @@
 import { ChannelType, Client, EmbedBuilder, Events, GuildMember } from "discord.js";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 import env from "../Utils/env";
+import { getCacheByKey } from "../Utils/GetCache";
 
 export default class GuildMemberAdd extends BaseEvent<GuildMember> {
   type: string = Events.GuildMemberAdd;
@@ -24,7 +25,8 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
 
   private dmEmbed(client: Client) {
     const rules =
-      client.channels.cache.get(env("RULES_CHANNEL_ID")) || "Rules Channel in Undefined Server.";
+      client.channels.cache.get(getCacheByKey("channels", "RulesChannel")) ||
+      "Rules Channel in Undefined Server.";
 
     return new EmbedBuilder()
       .setColor("Blue")
@@ -58,10 +60,10 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
   }
 
   handler({ action, client }: ActionInterface<GuildMember>) {
-    const channels = action.guild.channels.cache.get(env("WELCOME_CHANNEL_ID"));
+    const channels = action.guild.channels.cache.get(getCacheByKey("channels", "WelcomeChannel"));
     if (!channels || channels.type !== ChannelType.GuildText) return;
 
-    action.roles.add(env("STARTING_ROLE"));
+    action.roles.add(getCacheByKey("roles", "starting"));
 
     action.send({ embeds: [this.dmEmbed(client)] });
 

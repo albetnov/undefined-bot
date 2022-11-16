@@ -6,9 +6,11 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import { DocumentData, QuerySnapshot } from "firebase/firestore";
+import { logger } from "..";
 import getRules from "../Repositories/GetRules";
 import BaseListener, { HandlerProps } from "../Utils/BaseListener";
 import env from "../Utils/env";
+import { getCacheByKey } from "../Utils/GetCache";
 
 export const AGREE_RULES = "agreeRules";
 export const DISAGREE_RULES = "disagreeRules";
@@ -56,9 +58,9 @@ export class CastRules extends BaseListener {
   }
 
   async handler({ response }: HandlerProps) {
-    const channels = response.guild?.channels.cache.get(env("RULES_CHANNEL_ID"));
+    const channels = response.guild?.channels.cache.get(getCacheByKey("channels", "RulesChannel"));
     if (!channels || channels.type !== ChannelType.GuildText) {
-      console.log("incompitable channel");
+      logger.warn("incompitable channel");
       return;
     }
 

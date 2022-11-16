@@ -9,6 +9,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import env from "./Utils/env";
+import pino from "pino";
+export const logger = pino();
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -32,7 +34,7 @@ async function login() {
     env("FIREBASE_AUTH_EMAIL"),
     env("FIREBASE_AUTH_PASSWORD")
   );
-  console.log(user.user);
+  logger.info(user.user);
 }
 
 login();
@@ -41,7 +43,6 @@ import { Client, Routes, REST, GatewayIntentBits } from "discord.js";
 import Commands from "./Kernels/Commands";
 import Events from "./Kernels/Events";
 import insertLog from "./Repositories/InsertLog";
-
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -75,7 +76,7 @@ async function main() {
   } catch (err: any) {
     insertLog(err.message, err);
 
-    console.error(err);
+    logger.error(err);
   }
 }
 
@@ -83,5 +84,5 @@ main();
 
 process.on("unhandledRejection", (error: any) => {
   insertLog(error.message, error);
-  console.error(error);
+  logger.error(error);
 });

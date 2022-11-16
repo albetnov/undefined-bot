@@ -1,14 +1,7 @@
 import { CastRules } from "../Listeners/CastRules";
-import { SetByeChannel } from "../Listeners/SetByeChannel";
-import { SetFlutterChannel } from "../Listeners/SetFlutterChannel";
-import { SetWelcomeChannel } from "../Listeners/SetWelcomeChannel";
+import { RefreshCache } from "../Listeners/RefreshCache";
 import BaseListener from "../Utils/BaseListener";
 
-const loader: BaseListener[] = [
-  new SetFlutterChannel(),
-  new CastRules(),
-  new SetWelcomeChannel(),
-  new SetByeChannel(),
-];
+const loader: BaseListener[] = [new CastRules(), new RefreshCache()];
 
 export default loader;

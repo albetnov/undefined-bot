@@ -1,6 +1,7 @@
 import { ChannelType, Client, EmbedBuilder, Events, GuildMember } from "discord.js";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 import env from "../Utils/env";
+import { getCacheByKey } from "../Utils/GetCache";
 
 export default class GuildMemberRemove extends BaseEvent<GuildMember> {
   type: string = Events.GuildMemberRemove;
@@ -21,7 +22,7 @@ export default class GuildMemberRemove extends BaseEvent<GuildMember> {
   }
 
   handler({ action, client }: ActionInterface<GuildMember>) {
-    const channels = action.guild.channels.cache.get(env("BYE_CHANNEL_ID"));
+    const channels = action.guild.channels.cache.get(getCacheByKey("channels", "ByeChannel"));
     if (!channels || channels.type !== ChannelType.GuildText) return;
 
     channels.send({ embeds: [this.embeds(action, client)] });
