@@ -41,7 +41,7 @@ login();
 import { Client, Routes, REST, GatewayIntentBits } from "discord.js";
 import Commands from "./Kernels/Commands";
 import Events from "./Kernels/Events";
-import insertLog from "./Repositories/InsertLog";
+import LogRepository from "./Repositories/LogRepository";
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -53,6 +53,7 @@ const client = new Client({
   ],
 });
 const rest = new REST({ version: "10" }).setToken(env("TOKEN"));
+const insertLog = new LogRepository().addLog;
 
 Events.forEach((item) => {
   try {

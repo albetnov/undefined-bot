@@ -5,9 +5,9 @@ import {
   ChannelType,
   EmbedBuilder,
 } from "discord.js";
-import { DocumentData, QuerySnapshot } from "firebase/firestore";
+import { DocumentData } from "firebase/firestore";
 import { logger } from "..";
-import getRules from "../Repositories/GetRules";
+import RulesRepository from "../Repositories/RulesRepository";
 import BaseListener, { HandlerProps } from "../Utils/BaseListener";
 import env from "../Utils/env";
 import { getCacheByKey } from "../Utils/GetCache";
@@ -18,12 +18,7 @@ export const DISAGREE_RULES = "disagreeRules";
 export class CastRules extends BaseListener {
   name = "CastRules";
 
-  private embeds(rules: QuerySnapshot<DocumentData>) {
-    const fields = rules.docs.map((item: DocumentData) => {
-      const data = item.data();
-      return { name: data.name, value: data.value };
-    });
-
+  private embeds(rules: DocumentData) {
     return new EmbedBuilder()
       .setColor("Yellow")
       .setAuthor({
@@ -34,7 +29,7 @@ export class CastRules extends BaseListener {
       .setDescription(
         `Hello and welcome to ${env("SERVER_NAME")}! Here's some rule you must follows:`
       )
-      .addFields(...fields)
+      .addFields(...rules)
       .setImage("https://media.giphy.com/media/9JyTQrfpJs8zZ9xLI3/giphy.gif")
       .setFooter({
         text: "That's all. - Artisan",
@@ -64,7 +59,7 @@ export class CastRules extends BaseListener {
       return;
     }
 
-    const rules = await getRules();
+    const rules = await new RulesRepository().mapToKeyAndValue();
 
     channels.send({ embeds: [this.embeds(rules)], components: [this.buttons()] });
 

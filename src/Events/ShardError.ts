@@ -1,11 +1,11 @@
 import { Events } from "discord.js";
-import insertLog from "../Repositories/InsertLog";
+import LogRepository from "../Repositories/LogRepository";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 
 export default class ShardError extends BaseEvent<Error> {
   type: string = Events.ShardError;
 
   handler({ action }: ActionInterface<Error>) {
-    insertLog(action.message, action);
+    new LogRepository().addLog(action.message, action);
   }
 }

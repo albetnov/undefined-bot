@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
 import { DocumentData } from "firebase/firestore";
-import getRoadmap from "../Repositories/GetRoadmap";
+import RoadmapRepository from "../Repositories/RoadmapRepository";
 
 export default class Roadmap extends BaseCommand {
   name = "roadmap";
@@ -45,7 +45,7 @@ export default class Roadmap extends BaseCommand {
       return;
     }
 
-    const roadmap = await getRoadmap(language);
+    const roadmap = await new RoadmapRepository().find(language);
 
     if (!roadmap.exists()) {
       action.reply(`Ups, ${language} not exist.`);
