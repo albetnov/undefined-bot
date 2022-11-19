@@ -5,7 +5,7 @@ import BaseListener, { HandlerProps } from "../Utils/BaseListener";
 export class RefreshCache extends BaseListener {
   name = "RefreshCache";
 
-  async handler({ response, parameters, client }: HandlerProps) {
+  async handler({ response, parameters }: HandlerProps) {
     if (parameters.length > 0) {
       const value = parameters[0].toLowerCase();
 
@@ -15,7 +15,7 @@ export class RefreshCache extends BaseListener {
           response.channel.send("Roles cache refreshed!");
           return;
         case "channels":
-          await refreshChannels(client);
+          await refreshChannels();
           response.channel.send("Channels cache refreshed!");
           return;
         default:
@@ -23,7 +23,7 @@ export class RefreshCache extends BaseListener {
           return;
       }
     }
-    await refreshChannels(client);
+    await refreshChannels();
     await refreshRoles();
     response.channel.send("All cache has been refreshed!");
   }
