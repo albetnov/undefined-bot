@@ -36,7 +36,6 @@ const fileCreated = (path) => {
 };
 
 yargs(hideBin(process.argv))
-  .describe("Basic Utility to help you generating file")
   .command(...basicBuilder("create:boot", "Boot"), (argv) => {
     const path = checkForArgv(argv, "Boot");
     if (!path) return;
@@ -76,6 +75,24 @@ yargs(hideBin(process.argv))
     const path = checkForArgv(argv, "Interactions/Modals");
     if (!path) return;
     const contents = `import { ModalBuilder, ModalSubmitInteraction, CacheType } from "discord.js"\nimport BaseModal from "../../Utils/BaseModal";\n\nexport default class ${argv.file} extends BaseModal {\n\tcustomId = "${argv.file}";\n\n\tbuilder(builder: ModalBuilder) {}\n\n\thandler(interaction: ModalSubmitInteraction<CacheType>): void {}\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
+  .command(...basicBuilder("create:repo", "Repository"), (argv) => {
+    const path = checkForArgv(argv, "Repositories");
+    if (!path) return;
+    const contents = `import BaseRepository from "../Utils/BaseRepository";\n\nexport default class ${
+      argv.file
+    } extends BaseRepository {\n\tname = "${argv.file.toLowerCase()}";\n}`;
+    fs.writeFileSync(path, contents);
+    fileCreated(path);
+  })
+  .command(...basicBuilder("create:realtime-repo", "Realtime Repository"), (argv) => {
+    const path = checkForArgv(argv, "Repositories");
+    if (!path) return;
+    const contents = `import BaseRealtimeRepository from "../Utils/BaseRealTimeRepo";\nimport { Client } from "discord.js";\nimport { DocumentData } from "firebase/firestore";\n\nexport default class ${
+      argv.file
+    } extends BaseRealtimeRepository {\n\tname = "${argv.file.toLowerCase()}";\n\n\tasync afterListen(client: Client, data: DocumentData[]) {}\n\n\tasync listen(client: Client) {\n\t\tthis.afterListen(client, data)\n\t}\n}`;
     fs.writeFileSync(path, contents);
     fileCreated(path);
   })
