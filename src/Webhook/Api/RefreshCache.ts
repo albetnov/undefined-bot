@@ -21,7 +21,7 @@ export default class RefreshCache extends BaseApi<Promise<object>> {
 
   async handler(req: FastifyRequest, res: FastifyReply) {
     if (!req.body) {
-      return { message: "Where the fuck is your body " };
+      return {};
     }
 
     const body = req.body as object;
