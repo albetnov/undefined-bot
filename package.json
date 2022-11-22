@@ -10,6 +10,7 @@
     "start": "nodemon | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "dev:delete": "ts-node ./src/Utils/clear.ts",
     "build": "node creator create:deploy",
+    "tsc": "tsc",
     "creator": "node creator"
   },
   "dependencies": {
