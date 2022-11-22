@@ -3,32 +3,42 @@ import { logger } from "..";
 import routes from "./Routes";
 const fastify = Fastify({ logger: true });
 import env from "../Utils/env";
+import cors from "@fastify/cors";
+import TokenRepository from "../Repositories/TokenRepository";
 
 export default class WebhookHttp {
   handler() {
+    fastify.register(cors);
+
+    fastify.get("/health", () => {
+      return { message: "OK!" };
+    });
+
     fastify.register(
       async (route, options) => {
         route.addHook("preHandler", async (request, reply) => {
-          logger.warn("Hook!");
+          const token = await new TokenRepository().find("token");
+
+          if (!token.exists()) {
+            reply.send({ error: "Token not found. Please try again" });
+            return;
+          }
+
+          const data = token.data();
+
+          if (data!.expire_at.toDate() < new Date()) {
+            reply.send({ error: "Token expired. Please try again." });
+            return;
+          }
+
+          const query = request.query as any;
+          if (query.adminKey !== data!.value) {
+            reply.send({ error: "Token mismatch" });
+            return;
+          }
         });
         routes.forEach((item) => {
           route[item.type](item.url, item.schema, item.handler);
-          // switch (item.type) {
-          //   case ApiMethods.POST:
-          //     route.post(item.url, item.schema, item.handler);
-          //     break;
-          //   case ApiMethods.PATCH:
-          //     route.patch(item.url, item.schema, item.handler);
-          //     break;
-          //   case ApiMethods.PUT:
-          //     route.put(item.url, item.schema, item.handler);
-          //     break;
-          //   case ApiMethods.DELETE:
-          //     route.delete(item.url, item.schema, item.handler);
-          //     break;
-          //   default:
-          //     route.get(item.url, item.schema, item.handler);
-          // }
         });
       },
       { prefix: "api" }
