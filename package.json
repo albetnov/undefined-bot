@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "init:config": "tsc --init",
-    "start": "nodemon | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
+    "start": "nodemon | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "dev:delete": "ts-node ./src/Utils/clear.ts",
     "build": "node creator create:deploy",
     "creator": "node creator"
@@ -17,7 +17,9 @@
     "dayjs": "^1.11.6",
     "discord.js": "^14.6.0",
     "dotenv": "^16.0.3",
+    "fastify": "^4.10.2",
     "firebase": "^9.13.0",
+    "fluent-json-schema": "^4.0.0",
     "node-schedule": "^2.1.0",
     "pino": "^8.7.0",
     "pino-pretty": "^9.1.1"

@@ -3,6 +3,7 @@ import { logger } from "..";
 import Boot from "../Kernels/Boot";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 import RealtimeRepo from "../Kernels/RealtimeRepo";
+import WebhookHttp from "../Webhook/WebhookHttp";
 
 export default class Ready extends BaseEvent<Client> {
   type: string = Events.ClientReady;
@@ -17,5 +18,8 @@ export default class Ready extends BaseEvent<Client> {
     RealtimeRepo.forEach((item) => {
       item.listen(client);
     });
+
+    // Start Webhook.
+    new WebhookHttp().handler();
   }
 }
