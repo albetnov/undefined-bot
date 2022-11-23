@@ -3,26 +3,29 @@ import jSchema from "fluent-json-schema";
 import { ChannelType, ColorResolvable, Colors, EmbedBuilder } from "discord.js";
 import { FastifyReply } from "fastify";
 
+type OrNull<T> = T | null;
+type StringOrNull = OrNull<string>;
+
 interface AuthorSchema {
   name: string;
-  url?: string;
-  iconUrl?: string;
+  url: StringOrNull;
+  iconUrl: StringOrNull;
 }
 
 interface FieldSchema {
   name: string;
   value: string;
-  inline?: boolean;
+  inline: OrNull<boolean>;
 }
 
 interface BodyInterface {
   title: string;
   description: string;
-  author?: AuthorSchema;
+  author: OrNull<AuthorSchema>;
   fields?: FieldSchema[];
-  color?: ColorResolvable;
-  thumbnail?: string;
-  image?: string;
+  color: OrNull<ColorResolvable>;
+  thumbnail: StringOrNull;
+  image: StringOrNull;
   channel_id: string;
 }
 
@@ -34,9 +37,9 @@ export default class SendEmbed extends BaseApi<Promise<FastifyReply>> {
   description = "";
   color: ColorResolvable | null = null;
   fields: FieldSchema[] = [];
-  image: string | null = null;
-  thumbnail: string | null = "";
-  author: AuthorSchema | null = null;
+  image: StringOrNull = null;
+  thumbnail: StringOrNull = null;
+  author: OrNull<AuthorSchema> = null;
 
   constructor() {
     super();
@@ -44,12 +47,27 @@ export default class SendEmbed extends BaseApi<Promise<FastifyReply>> {
   }
 
   embed() {
+    const author = this.author
+      ? {
+          name: this.author.name,
+          url: this.author.url || undefined,
+          iconUrl: this.author.iconUrl || undefined,
+        }
+      : null;
+
+    const fields = this.fields
+      ? this.fields.map((item) => ({
+          ...item,
+          inline: item.inline ? item.inline : false,
+        }))
+      : [];
+
     return new EmbedBuilder()
-      .setAuthor(this.author)
+      .setAuthor(author)
       .setTitle(this.title)
       .setDescription(this.description)
       .setColor(this.color)
-      .setFields(...this.fields)
+      .setFields(fields)
       .setImage(this.image)
       .setThumbnail(this.thumbnail);
   }
@@ -60,30 +78,46 @@ export default class SendEmbed extends BaseApi<Promise<FastifyReply>> {
         .object()
         .prop(
           "author",
-          jSchema
-            .object()
-            .prop("name", jSchema.string().required())
-            .prop("iconURL", jSchema.string())
-            .prop("url", jSchema.string())
+          jSchema.anyOf([
+            jSchema
+              .object()
+              .prop("name", jSchema.string().minLength(1).required())
+              .prop(
+                "iconURL",
+                jSchema.anyOf([jSchema.string().format(jSchema.FORMATS.URL), jSchema.null()])
+              )
+              .prop(
+                "url",
+                jSchema.anyOf([jSchema.string().format(jSchema.FORMATS.URL), jSchema.null()])
+              ),
+            jSchema.null(),
+          ])
         )
-        .prop("description", jSchema.string().required())
-        .prop("title", jSchema.string().required())
+        .prop("description", jSchema.string().minLength(1).required())
+        .prop("title", jSchema.string().minLength(1).required())
         .prop(
           "fields",
-          jSchema
-            .array()
-            .items(
+          jSchema.anyOf([
+            jSchema.array().items(
               jSchema
                 .object()
-                .prop("name", jSchema.string().required())
-                .prop("value", jSchema.string().required())
-                .prop("inline", jSchema.boolean())
-            )
+                .prop("name", jSchema.string().minLength(1).required())
+                .prop("value", jSchema.string().minLength(1).required())
+                .prop("inline", jSchema.anyOf([jSchema.boolean(), jSchema.null()]))
+            ),
+            jSchema.null(),
+          ])
         )
-        .prop("color", jSchema.string())
-        .prop("thumbnail", jSchema.string())
-        .prop("image", jSchema.string())
-        .prop("channel_id", jSchema.string().required()),
+        .prop("color", jSchema.anyOf([jSchema.string(), jSchema.null()]))
+        .prop(
+          "thumbnail",
+          jSchema.anyOf([jSchema.string().format(jSchema.FORMATS.URL), jSchema.null()])
+        )
+        .prop(
+          "image",
+          jSchema.anyOf([jSchema.string().format(jSchema.FORMATS.URL), jSchema.null()])
+        )
+        .prop("channel_id", jSchema.string().minLength(1).required()),
     });
   }
 
@@ -104,11 +138,11 @@ export default class SendEmbed extends BaseApi<Promise<FastifyReply>> {
       this.color = body.color;
     }
 
-    if ("thumbnail" in body && body.thumbnail) {
+    if ("thumbnail" in body && body.thumbnail && body.thumbnail.trim() !== "") {
       this.thumbnail = body.thumbnail;
     }
 
-    if ("image" in body && body.image) {
+    if ("image" in body && body.image && body.image.trim() !== "") {
       this.image = body.image;
     }
 

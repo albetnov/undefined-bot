@@ -16,8 +16,8 @@ export default class SendMessage extends BaseApi<Promise<FastifyReply>> {
     return this.extendSchema({
       body: jSchema
         .object()
-        .prop("channel_id", jSchema.string().required())
-        .prop("message", jSchema.string().required()),
+        .prop("channel_id", jSchema.string().minLength(1).required())
+        .prop("message", jSchema.string().minLength(1).required()),
     });
   }
 

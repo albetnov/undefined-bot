@@ -110,7 +110,7 @@ yargs(hideBin(process.argv))
       "Webhook/Api",
       `import BaseApi, { ApiMethods, ApiHandlerInterface } from "../../Utils/BaseApi";\nimport jSchema from "fluent-json-schema";\n\nexport default class ${
         argv.file
-      } extends BaseApi<Promise<object>> {\n\turl="/${argv.file.toLowerCase()}}";\n\tmethod: ApiMethods = ApiMethods.GET;\n\n\tschema() {\n\t\treturn this.extendSchema({});\n\t}\n\n\tasync handler({ req, res, client }: ApiHandlerInterface) {\n\t\treturn { message: "pong!" }\n\t}\n}\n`
+      } extends BaseApi<Promise<object>> {\n\turl="/${argv.file.toLowerCase()}";\n\tmethod: ApiMethods = ApiMethods.GET;\n\n\tschema() {\n\t\treturn this.extendSchema({});\n\t}\n\n\tasync handler({ req, res, client }: ApiHandlerInterface) {\n\t\treturn { message: "pong!" }\n\t}\n}\n`
     )
   )
   .command({
