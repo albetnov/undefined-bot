@@ -4,6 +4,7 @@ import Boot from "../Kernels/Boot";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 import RealtimeRepo from "../Kernels/RealtimeRepo";
 import WebhookHttp from "../Webhook/WebhookHttp";
+import env from "../Utils/env";
 
 export default class Ready extends BaseEvent<Client> {
   type: string = Events.ClientReady;
@@ -20,6 +21,8 @@ export default class Ready extends BaseEvent<Client> {
     });
 
     // Start Webhook.
-    new WebhookHttp().handler(client);
+    if (env("ENABLE_WEBHOOK", "false") === "true") {
+      new WebhookHttp().handler(client);
+    }
   }
 }
