@@ -1,3 +1,4 @@
+import { Client } from "discord.js";
 import { FastifyReply, FastifyRequest, RouteShorthandOptions } from "fastify";
 import jSchema from "fluent-json-schema";
 
@@ -13,6 +14,12 @@ export enum ApiMethods {
   PUT = "put",
   PATCH = "patch",
   DELETE = "delete",
+}
+
+export interface ApiHandlerInterface {
+  req: FastifyRequest;
+  res: FastifyReply;
+  client: Client;
 }
 
 export default abstract class BaseApi<T> {
@@ -50,5 +57,5 @@ export default abstract class BaseApi<T> {
     return this.baseSchema();
   }
 
-  abstract handler(request: FastifyRequest, response: FastifyReply): T;
+  abstract handler(options: ApiHandlerInterface): T;
 }

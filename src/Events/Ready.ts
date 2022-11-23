@@ -20,6 +20,6 @@ export default class Ready extends BaseEvent<Client> {
     });
 
     // Start Webhook.
-    new WebhookHttp().handler();
+    new WebhookHttp().handler(client);
   }
 }

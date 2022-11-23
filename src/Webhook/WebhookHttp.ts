@@ -5,9 +5,10 @@ const fastify = Fastify({ logger: true });
 import env from "../Utils/env";
 import cors from "@fastify/cors";
 import TokenRepository from "../Repositories/TokenRepository";
+import { Client } from "discord.js";
 
 export default class WebhookHttp {
-  handler() {
+  handler(client: Client) {
     fastify.register(cors);
 
     fastify.get("/health", () => {
@@ -17,28 +18,30 @@ export default class WebhookHttp {
     fastify.register(
       async (route, options) => {
         route.addHook("preHandler", async (request, reply) => {
-          const token = await new TokenRepository().find("token");
+          if (env("APP_ENV", "development") !== "development") {
+            const token = await new TokenRepository().find("token");
 
-          if (!token.exists()) {
-            reply.status(403).send({ error: "Token not found. Please try again" });
-            return;
-          }
+            if (!token.exists()) {
+              reply.status(403).send({ error: "Token not found. Please try again" });
+              return;
+            }
 
-          const data = token.data();
+            const data = token.data();
 
-          if (data!.expire_at.toDate() < new Date()) {
-            reply.status(403).send({ error: "Token expired. Please try again." });
-            return;
-          }
+            if (data!.expire_at.toDate() < new Date()) {
+              reply.status(403).send({ error: "Token expired. Please try again." });
+              return;
+            }
 
-          const query = request.query as any;
-          if (query.adminKey !== data!.value) {
-            reply.status(403).send({ error: "Token mismatch" });
-            return;
+            const query = request.query as any;
+            if (query.adminKey !== data!.value) {
+              reply.status(403).send({ error: "Token mismatch" });
+              return;
+            }
           }
         });
         routes.forEach((item) => {
-          route[item.type](item.url, item.schema, item.handler);
+          route[item.type](item.url, item.schema, (req, res) => item.handler({ req, res, client }));
         });
       },
       { prefix: "api" }

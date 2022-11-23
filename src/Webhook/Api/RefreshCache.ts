@@ -1,7 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify";
 import refreshChannels from "../../Refresher/RefreshChannels";
 import refreshRoles from "../../Refresher/RefreshRoles";
-import BaseApi, { ApiMethods } from "../../Utils/BaseApi";
+import BaseApi, { ApiHandlerInterface, ApiMethods } from "../../Utils/BaseApi";
 
 export default class RefreshCache extends BaseApi<Promise<object>> {
   url = "/refreshCache";
@@ -12,14 +11,14 @@ export default class RefreshCache extends BaseApi<Promise<object>> {
       body: {
         type: "object",
         properties: {
-          channels: { type: "string" },
-          roles: { type: "string" },
+          channels: { type: "boolean" },
+          roles: { type: "boolean" },
         },
       },
     });
   }
 
-  async handler(req: FastifyRequest, res: FastifyReply) {
+  async handler({ req }: ApiHandlerInterface) {
     if (!req.body) {
       return {};
     }
