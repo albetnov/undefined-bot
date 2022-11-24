@@ -2,7 +2,7 @@ import Fastify from "fastify";
 import { logger } from "..";
 import routes from "./Routes";
 const fastify = Fastify({ logger: true });
-import env from "../Utils/env";
+import env, { toIntEnv } from "../Utils/env";
 import cors from "@fastify/cors";
 import TokenRepository from "../Repositories/TokenRepository";
 import { Client } from "discord.js";
@@ -47,15 +47,12 @@ export default class WebhookHttp {
       { prefix: "api" }
     );
 
-    fastify.listen(
-      { port: env("APP_ENV", "development") === "production" ? 4139 : 3000 },
-      (err, address) => {
-        if (err) {
-          fastify.log.error(err);
-          process.exit(1);
-        }
-        logger.info(`Webhook is ready at: ${address}`);
+    fastify.listen({ port: toIntEnv("WEBHOOK_PORT") }, (err, address) => {
+      if (err) {
+        fastify.log.error(err);
+        process.exit(1);
       }
-    );
+      logger.info(`Webhook is ready at: ${address}`);
+    });
   }
 }

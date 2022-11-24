@@ -55,6 +55,17 @@ const client = new Client({
 const rest = new REST({ version: "10" }).setToken(env("TOKEN"));
 const insertLog = new LogRepository().addLog;
 
+if (env("ENABLE_WEBSOCKET") === "true" && env("ENABLE_WEBHOOK") === "true") {
+  logger.error("EITHER WEBSOCKET OR WEBHOOK. CHOOSE ONE OF IT.");
+  logger.info(
+    "If your host can run both bot and the server. Webhook is recommended. As implementing WS is costly."
+  );
+  logger.info(
+    "But if your host unable to do so. You may need to host Websocket Bridge and use Websocket"
+  );
+  process.exit(1);
+}
+
 Events.forEach((item) => {
   try {
     client.on(item.type, (action) => {
