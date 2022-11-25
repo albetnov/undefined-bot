@@ -2,6 +2,8 @@ import { Client } from "discord.js";
 import { logger } from "..";
 import { io } from "socket.io-client";
 import env from "../Utils/env";
+import Sockets from "./Listeners/Sockets";
+import { KernelableSocket } from "./Listeners/sock";
 
 export default class WebsocketClient {
   url = "";
@@ -28,8 +30,8 @@ export default class WebsocketClient {
       logger.info(`Connected: ${socket.id}`);
     });
 
-    socket.on("refreshCache", (data) => {
-      console.log(data);
+    Sockets.forEach((item: KernelableSocket) => {
+      socket.on(item.ev, (...args) => item.listener({ params: args, client }));
     });
 
     socket.on("disconnect", () => {
