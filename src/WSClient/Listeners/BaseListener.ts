@@ -8,5 +8,9 @@ export interface SocketListenerHandler {
 export default abstract class BaseListener {
   abstract socket: string;
 
+  constructor() {
+    this.handler = this.handler.bind(this);
+  }
+
   abstract handler({ params, client }: SocketListenerHandler): void;
 }

@@ -1,18 +1,18 @@
 import BaseApi, { ApiMethods, ApiHandlerInterface } from "../../Utils/BaseApi";
 import jSchema from "fluent-json-schema";
-import { ChannelType, ColorResolvable, Colors, EmbedBuilder } from "discord.js";
+import { ChannelType, ColorResolvable, EmbedBuilder } from "discord.js";
 import { FastifyReply } from "fastify";
 
-type OrNull<T> = T | null;
-type StringOrNull = OrNull<string>;
+export type OrNull<T> = T | null;
+export type StringOrNull = OrNull<string>;
 
-interface AuthorSchema {
+export interface AuthorSchema {
   name: string;
   url: StringOrNull;
   iconUrl: StringOrNull;
 }
 
-interface FieldSchema {
+export interface FieldSchema {
   name: string;
   value: string;
   inline: OrNull<boolean>;
