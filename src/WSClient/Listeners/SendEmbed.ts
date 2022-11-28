@@ -13,6 +13,11 @@ export default class SendEmbed extends BaseListener {
   private image: StringOrNull = null;
   private thumbnail: StringOrNull = null;
 
+  constructor() {
+    super();
+    this.embed = this.embed.bind(this);
+  }
+
   embed() {
     const author = this.author
       ? {
@@ -49,7 +54,7 @@ export default class SendEmbed extends BaseListener {
           iconUrl: z.string().url().nullable(),
           url: z.string().url().nullable(),
         })
-        .optional(),
+        .nullable(),
       description: z.string().min(1),
       title: z.string().min(1),
       fields: z
@@ -60,7 +65,7 @@ export default class SendEmbed extends BaseListener {
             inline: z.boolean().optional(),
           })
         )
-        .optional(),
+        .nullable(),
       color: z.string().nullable(),
       thumbnail: z.string().url().nullable(),
       image: z.string().url().nullable(),
@@ -91,10 +96,10 @@ export default class SendEmbed extends BaseListener {
       }
 
       this.title = result.data.title;
-      this.color = result.data.color as ColorResolvable;
+      this.color = result.data.color?.trim() === "" ? null : (result.data.color as ColorResolvable);
       this.description = result.data.description;
-      this.image = result.data.image;
-      this.thumbnail = result.data.thumbnail;
+      this.image = result.data.image?.trim() === "" ? null : result.data.image;
+      this.thumbnail = result.data.thumbnail?.trim() === "" ? null : result.data.thumbnail;
 
       const channel = client.channels.cache.get(result.data.channel_id);
       if (!channel || channel.type !== ChannelType.GuildText) {
