@@ -10,7 +10,7 @@ export default class WebsocketClient {
 
   constructor() {
     if (env("APP_ENV", "development") === "production") {
-      this.url = env("WEBHOOK_URL_LIVE");
+      this.url = env("WEBSOCKET_URL_LIVE");
     } else {
       this.url = env("WEBSOCKET_URL", "http://localhost:3001");
     }
