@@ -52,7 +52,7 @@ export default class WebhookHttp {
         fastify.log.error(err);
         process.exit(1);
       }
-      logger.info(`Webhook is ready at: ${address}`);
+      logger.info(`[WebHook]: Webhook is ready at: ${address}`);
     });
   }
 }

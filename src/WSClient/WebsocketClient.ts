@@ -17,33 +17,41 @@ export default class WebsocketClient {
   }
 
   handler(client: Client) {
-    logger.info(`Listening to Websocket at ${this.url}`);
-    const socket = io(this.url);
+    const socket = io(this.url, {
+      auth: {
+        token: env("WEBSOCKET_TOKEN"),
+      },
+    });
 
     socket.on("connect", () => {
+      logger.info(`[WebSocket]: Listening to Websocket at ${this.url}`);
       const engine = socket.io.engine;
 
       engine.once("upgrade", () => {
-        logger.info("Socket Upgraded: " + engine.transport.name);
+        logger.info("[WebSocket]: Socket Upgraded: " + engine.transport.name);
       });
 
-      logger.info(`Connected: ${socket.id}`);
+      logger.info(`[WebSocket]: Connected: ${socket.id}`);
     });
 
     Sockets.forEach((item: KernelableSocket) => {
-      socket.on(item.ev, (...args) => item.listener({ params: args, client }));
+      socket.on(item.ev, (...args) => item.listen()({ params: args, client }));
     });
 
     socket.on("disconnect", () => {
-      logger.warn("Socket disconnected.");
+      logger.warn("[WebSocket]: Socket disconnected.");
     });
 
     socket.io.on("reconnect_attempt", () => {
-      logger.info("Reconnecting...");
+      logger.info("[WebSocket]: Reconnecting...");
     });
 
     socket.io.on("reconnect", () => {
-      logger.warn("Attempt to reconnect");
+      logger.warn("[WebSocket]: Attempt to reconnect");
+    });
+
+    socket.on("connect_error", (err) => {
+      logger.error("[WebSocket]: Failed connect. " + err);
     });
   }
 }

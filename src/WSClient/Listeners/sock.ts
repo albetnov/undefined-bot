@@ -1,8 +1,9 @@
+import { logger } from "../..";
 import BaseListener, { SocketListenerHandler } from "./BaseListener";
 
 export interface KernelableSocket {
   ev: string;
-  listener(param: SocketListenerHandler): void;
+  listen(): (param: SocketListenerHandler) => void;
 }
 
 export default (classRef: new () => BaseListener) => {
@@ -10,6 +11,9 @@ export default (classRef: new () => BaseListener) => {
 
   return {
     ev: instance.socket,
-    listener: instance.handler,
+    listen: () => {
+      logger.info(`[WebSocket]: ${instance.socket} triggered.`);
+      return instance.handler;
+    },
   };
 };

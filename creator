@@ -113,6 +113,13 @@ yargs(hideBin(process.argv))
       } extends BaseApi<Promise<object>> {\n\turl="/${argv.file.toLowerCase()}";\n\tmethod: ApiMethods = ApiMethods.GET;\n\n\tschema() {\n\t\treturn this.extendSchema({});\n\t}\n\n\tasync handler({ req, res, client }: ApiHandlerInterface) {\n\t\treturn { message: "pong!" }\n\t}\n}\n`
     )
   )
+  .command(...basicBuilder("create:sock", "Web Socket Listener"), (argv) =>
+    basicCommand(
+      argv,
+      "WSClient/Listeners",
+      `import BaseListener, { SocketListenerHandler } from "./BaseListener";\n\nexport default class ${argv.file} extends BaseListener {\n\tsocket: string = "${argv.file}";\n\n\thandler({params}: SocketListenerHandler) {}\n}`
+    )
+  )
   .command({
     command: "create:deploy",
     description: "Build and create ready to deploy zip file",

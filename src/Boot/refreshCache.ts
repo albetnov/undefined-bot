@@ -12,5 +12,5 @@ export default function refreshCache() {
 
   refreshChannels();
   refreshRoles();
-  logger.info("Cache refreshed!");
+  logger.info("[Boot]: Cache refreshed!");
 }

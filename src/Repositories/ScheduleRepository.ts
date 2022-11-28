@@ -8,7 +8,7 @@ export default class ScheduleRepository extends BaseRealtimeRepository {
   name = "scheduler";
 
   async afterListen(client: Client, data: DocumentData[]) {
-    logger.info("Resetting all schedules");
+    logger.info("[RealTime Repo]: Resetting all schedules");
     await gracefulShutdown();
 
     if (!data) {
