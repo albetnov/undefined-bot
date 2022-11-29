@@ -8,10 +8,10 @@
   "scripts": {
     "init:config": "tsc --init",
     "dev": "nodemon | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
-    "start": "tsc && node dist/index.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "start": "node dist/index.js | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "dev:delete": "ts-node ./src/Utils/clear.ts",
     "deploy": "node creator create:deploy",
-    "tsc": "tsc",
+    "build": "tsc",
     "creator": "node creator"
   },
   "dependencies": {
