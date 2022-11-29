@@ -144,7 +144,13 @@ yargs(hideBin(process.argv))
       archive.directory(__dirname + "/dist", "src/");
 
       // update files from root.
+
+      if (!fs.existsSync(__dirname + "/.env")) {
+        fs.writeFileSync(__dirname + "/.env");
+      }
+
       archive.file(".env", fs.readFileSync(__dirname + "/.env"));
+
       archive.file("package.json", fs.readFileSync(__dirname + "/package.json"));
       // archive.directory(__dirname + "src/Cache", "src/Cache/");
       archive.directory(__dirname + "/assets", "assets/");
