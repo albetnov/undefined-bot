@@ -1,4 +1,12 @@
-import { ChannelType, Client, EmbedBuilder, Events, GuildMember } from "discord.js";
+import { createCanvas, loadImage, Canvas } from "@napi-rs/canvas";
+import {
+  AttachmentBuilder,
+  ChannelType,
+  Client,
+  EmbedBuilder,
+  Events,
+  GuildMember,
+} from "discord.js";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 import env from "../Utils/env";
 import { getCacheByKey } from "../Utils/GetCache";
@@ -7,20 +15,21 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
   type: string = Events.GuildMemberAdd;
   SERVER_NAME: string = env("SERVER_NAME");
 
-  private embeds(member: GuildMember, client: Client) {
-    return new EmbedBuilder()
-      .setColor("Blue")
-      .setTitle(`Welcome ${member.displayName}!`)
-      .setDescription(
-        `Welcome to ${this.SERVER_NAME}. Please read the message I sent to you carefully!`
-      )
-      .setImage(member.avatarURL() || "https://media.giphy.com/media/XD9o33QG9BoMis7iM4/giphy.gif")
-      .setFooter({
-        iconURL:
-          client.user?.avatarURL() ||
-          "https://i.pinimg.com/564x/49/62/7e/49627e1d42add58548e4d6053c121dcf.jpg",
-        text: `${this.SERVER_NAME} - Artisan Bot ${new Date().getFullYear()}.`,
-      });
+  private embeds(member: GuildMember) {
+    return (
+      new EmbedBuilder()
+        .setColor("Blue")
+        .setTitle(`Welcome ${member.displayName}!`)
+        .setDescription(
+          `Welcome to ${this.SERVER_NAME}. Please read the message I sent to you carefully!`
+        )
+        // .setImage("https://media.giphy.com/media/XD9o33QG9BoMis7iM4/giphy.gif")
+        .setImage("attachment://image-profile.png")
+        .setFooter({
+          iconURL: "https://i.pinimg.com/564x/49/62/7e/49627e1d42add58548e4d6053c121dcf.jpg",
+          text: `${this.SERVER_NAME} - Artisan Bot ${new Date().getFullYear()}.`,
+        })
+    );
   }
 
   private dmEmbed(client: Client) {
@@ -52,14 +61,23 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
       )
       .setImage("https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif")
       .setFooter({
-        iconURL:
-          client.user?.avatarURL() ||
-          "https://i.pinimg.com/564x/49/62/7e/49627e1d42add58548e4d6053c121dcf.jpg",
+        iconURL: "https://i.pinimg.com/564x/49/62/7e/49627e1d42add58548e4d6053c121dcf.jpg",
         text: `Artisan Bot ${new Date().getFullYear()}`,
       });
   }
 
-  handler({ action, client }: ActionInterface<GuildMember>) {
+  applyText(canvas: Canvas, text: string) {
+    const context = canvas.getContext("2d");
+    let fontSize = 70;
+
+    do {
+      context.font = `${(fontSize -= 10)}px sans-serif`;
+    } while (context.measureText(text).width > canvas.width - 300);
+
+    return context.font;
+  }
+
+  async handler({ action, client }: ActionInterface<GuildMember>) {
     const channels = action.guild.channels.cache.get(getCacheByKey("channels", "WelcomeChannel"));
     if (!channels || channels.type !== ChannelType.GuildText) return;
 
@@ -67,6 +85,38 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
 
     action.send({ embeds: [this.dmEmbed(client)] });
 
-    channels.send({ embeds: [this.embeds(action, client)] });
+    const canvas = createCanvas(700, 250);
+    const context = canvas.getContext("2d");
+
+    const background = await loadImage("../../welcome.jpg");
+
+    context.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    context.strokeStyle = "#0099ff";
+
+    context.strokeRect(0, 0, canvas.width, canvas.height);
+
+    context.font = "28px sans-serif";
+    context.fillStyle = "#ffffff";
+    context.fillText("Profile", canvas.width / 2.5, canvas.height / 3.5);
+
+    context.font = this.applyText(canvas, `${action.displayName}`);
+    context.fillStyle = "#ffffff";
+    context.fillText(`${action.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
+
+    context.beginPath();
+    context.arc(125, 125, 100, 0, Math.PI * 2, true);
+    context.closePath();
+    context.clip();
+
+    const avatar = await loadImage(action.user.displayAvatarURL({ extension: "jpg" }));
+
+    context.drawImage(avatar, 25, 200, 200, canvas.height);
+
+    const attachment = new AttachmentBuilder(await canvas.encode("png"), {
+      name: "image-profile.png",
+    });
+
+    channels.send({ embeds: [this.embeds(action)], files: [attachment] });
   }
 }

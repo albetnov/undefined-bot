@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "init:config": "tsc --init",
-    "start": "nodemon | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "dev": "nodemon | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "start": "node | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "dev:delete": "ts-node ./src/Utils/clear.ts",
     "build": "node creator create:deploy",
     "tsc": "tsc",
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
+    "@napi-rs/canvas": "^0.1.30",
     "axios": "^1.1.3",
     "dayjs": "^1.11.6",
     "discord.js": "^14.6.0",
