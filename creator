@@ -146,7 +146,7 @@ yargs(hideBin(process.argv))
       // update files from root.
 
       if (!fs.existsSync(__dirname + "/.env")) {
-        fs.writeFileSync(__dirname + "/.env");
+        fs.writeFileSync(__dirname + "/.env", "");
       }
 
       archive.file(".env", fs.readFileSync(__dirname + "/.env"));
