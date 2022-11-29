@@ -53,7 +53,7 @@ const client = new Client({
     GatewayIntentBits.GuildPresences,
   ],
 });
-const rest = new REST({ version: "10" }).setToken(env("TOKEN"));
+export const rest = new REST({ version: "10" }).setToken(env("TOKEN"));
 const insertLog = new LogRepository().addLog;
 
 if (env("ENABLE_WEBSOCKET") === "true" && env("ENABLE_WEBHOOK") === "true") {

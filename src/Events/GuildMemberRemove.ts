@@ -1,4 +1,5 @@
 import { ChannelType, Client, EmbedBuilder, Events, GuildMember } from "discord.js";
+import SettingsRepository from "../Repositories/SettingsRepository";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 import env from "../Utils/env";
 import { getCacheByKey } from "../Utils/GetCache";
@@ -21,7 +22,14 @@ export default class GuildMemberRemove extends BaseEvent<GuildMember> {
       });
   }
 
-  handler({ action, client }: ActionInterface<GuildMember>) {
+  async handler({ action, client }: ActionInterface<GuildMember>) {
+    const result = await new SettingsRepository().find("enable_bye");
+    if (result.exists()) {
+      if (result.data().value) {
+        return;
+      }
+    }
+
     const channels = action.guild.channels.cache.get(getCacheByKey("channels", "ByeChannel"));
     if (!channels || channels.type !== ChannelType.GuildText) return;
 

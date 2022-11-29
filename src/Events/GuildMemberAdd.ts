@@ -7,6 +7,7 @@ import {
   Events,
   GuildMember,
 } from "discord.js";
+import SettingsRepository from "../Repositories/SettingsRepository";
 import BaseEvent, { ActionInterface } from "../Utils/BaseEvent";
 import env from "../Utils/env";
 import { getCacheByKey } from "../Utils/GetCache";
@@ -78,12 +79,25 @@ export default class GuildMemberAdd extends BaseEvent<GuildMember> {
   }
 
   async handler({ action, client }: ActionInterface<GuildMember>) {
+    const result = await new SettingsRepository().find("enable_welcome");
+    if (result.exists()) {
+      if (result.data().value) {
+        return;
+      }
+    }
+
     const channels = action.guild.channels.cache.get(getCacheByKey("channels", "WelcomeChannel"));
     if (!channels || channels.type !== ChannelType.GuildText) return;
 
-    action.roles.add(getCacheByKey("roles", "starting"));
+    const withRules = await new SettingsRepository().find("enable_rules");
 
-    action.send({ embeds: [this.dmEmbed(client)] });
+    if (withRules.exists()) {
+      if (withRules.data().value) {
+        action.roles.add(getCacheByKey("roles", "starting"));
+
+        action.send({ embeds: [this.dmEmbed(client)] });
+      }
+    }
 
     const canvas = createCanvas(700, 250);
     const context = canvas.getContext("2d");

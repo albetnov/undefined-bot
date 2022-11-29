@@ -2,14 +2,16 @@ import { ChannelType, Client, EmbedBuilder } from "discord.js";
 import { collection, DocumentData, onSnapshot, query } from "firebase/firestore";
 import { gracefulShutdown, scheduleJob } from "node-schedule";
 import { db, logger } from "..";
-import BaseRealtimeRepository from "../Utils/BaseRealTimeRepo";
+import BaseRealtimeRepository, { AfterListenProps } from "../Utils/BaseRealTimeRepo";
 
 export default class ScheduleRepository extends BaseRealtimeRepository {
   name = "scheduler";
 
-  async afterListen(client: Client, data: DocumentData[]) {
+  async afterListen({ client, data }: AfterListenProps) {
     logger.info("[RealTime Repo]: Resetting all schedules");
     await gracefulShutdown();
+
+    if (!Array.isArray(data) || !client) return;
 
     if (!data) {
       data = [];
@@ -19,7 +21,7 @@ export default class ScheduleRepository extends BaseRealtimeRepository {
       });
     }
 
-    data.map((item) => {
+    data.map((item: DocumentData) => {
       const channel = client.channels.cache.get(item.channel_id);
 
       if (!channel || channel.type !== ChannelType.GuildText) {
@@ -44,7 +46,7 @@ export default class ScheduleRepository extends BaseRealtimeRepository {
       snapshot.forEach((doc) => {
         data.push(doc.data());
       });
-      this.afterListen(client, data);
+      this.afterListen({ client, data });
     });
   }
 }
