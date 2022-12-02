@@ -18,7 +18,7 @@ export const DISAGREE_RULES = "disagreeRules";
 export class CastRules extends BaseListener {
   name = "CastRules";
 
-  private embeds(rules: DocumentData) {
+  embeds(rules: DocumentData) {
     return new EmbedBuilder()
       .setColor("Yellow")
       .setAuthor({
@@ -36,7 +36,7 @@ export class CastRules extends BaseListener {
       });
   }
 
-  private buttons() {
+  buttons() {
     return new ActionRowBuilder<ButtonBuilder>()
       .addComponents(
         new ButtonBuilder()

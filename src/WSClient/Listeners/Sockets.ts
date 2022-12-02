@@ -1,3 +1,4 @@
+import CastRules from "./CastRules";
 import ChannelList from "./ChannelList";
 import RefreshCache from "./RefreshCache";
 import SendEmbed from "./SendEmbed";
@@ -9,6 +10,7 @@ const Sockets: KernelableSocket[] = [
   sock(ChannelList),
   sock(SendMessage),
   sock(SendEmbed),
+  sock(CastRules),
 ];
 
 export default Sockets;
