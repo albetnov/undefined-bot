@@ -47,12 +47,15 @@ export default class WebhookHttp {
       { prefix: "api" }
     );
 
-    fastify.listen({ port: toIntEnv("WEBHOOK_PORT") }, (err, address) => {
-      if (err) {
-        fastify.log.error(err);
-        process.exit(1);
+    fastify.listen(
+      { port: env("APP_ENV") === "production" ? toIntEnv("PORT") : toIntEnv("WEBHOOK_PORT") },
+      (err, address) => {
+        if (err) {
+          fastify.log.error(err);
+          process.exit(1);
+        }
+        logger.info(`[WebHook]: Webhook is ready at: ${address}`);
       }
-      logger.info(`[WebHook]: Webhook is ready at: ${address}`);
-    });
+    );
   }
 }

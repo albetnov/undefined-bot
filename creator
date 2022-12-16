@@ -151,8 +151,15 @@ yargs(hideBin(process.argv))
 
       archive.file(".env", fs.readFileSync(__dirname + "/.env"));
 
-      archive.file("package.json", fs.readFileSync(__dirname + "/package.json"));
-      // archive.directory(__dirname + "src/Cache", "src/Cache/");
+      // Exclude devDependencies automatically.
+      const packageJson = JSON.parse(
+        fs.readFileSync(__dirname + "/package.json", { encoding: "utf-8" })
+      );
+
+      delete packageJson.devDependencies;
+
+      archive.append(JSON.stringify(packageJson), { name: "package.json" });
+
       archive.directory(__dirname + "/assets", "assets/");
       archive.append(null, { name: "src/Cache/" });
 
