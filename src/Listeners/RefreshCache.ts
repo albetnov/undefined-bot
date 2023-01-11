@@ -1,6 +1,7 @@
 import refreshChannels from "../Refresher/RefreshChannels";
 import refreshRoles from "../Refresher/RefreshRoles";
 import BaseListener, { HandlerProps } from "../Utils/BaseListener";
+import refreshSpiritServer from "../Refresher/RefreshSpiritServer";
 
 export class RefreshCache extends BaseListener {
   name = "RefreshCache";
@@ -18,6 +19,10 @@ export class RefreshCache extends BaseListener {
           await refreshChannels();
           response.channel.send("Channels cache refreshed!");
           return;
+        case "spirit":
+          await refreshSpiritServer();
+          response.channel.send("Spirit Server cache refreshed!");
+          return;
         default:
           response.channel.send("Parameter invalid!");
           return;
@@ -25,6 +30,7 @@ export class RefreshCache extends BaseListener {
     }
     await refreshChannels();
     await refreshRoles();
+    await refreshSpiritServer()
     response.channel.send("All cache has been refreshed!");
   }
 }

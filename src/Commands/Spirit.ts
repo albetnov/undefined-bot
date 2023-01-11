@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, User } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
 import random from "../Utils/random";
-import { imgUrl, message } from "../Utils/spiritServer";
+import SpiritServerRepository from "../Repositories/SpiritServerRepository";
 
 export default class Spirit extends BaseCommand {
   name = "spirit";
@@ -15,7 +15,8 @@ export default class Spirit extends BaseCommand {
   }
 
   embeds(user: User | null) {
-    const image = random(imgUrl);
+    const data = new SpiritServerRepository().getFromCache();
+    const image = random(data.imgUrls);
 
     let quote = "Random Picture from me to help you gain spirit!";
 
@@ -38,7 +39,7 @@ export default class Spirit extends BaseCommand {
     `;
 
     return new EmbedBuilder()
-      .setTitle(random(message))
+      .setTitle(random(data.quotes))
       .setImage(image)
       .setDescription(user ? description : quote);
   }

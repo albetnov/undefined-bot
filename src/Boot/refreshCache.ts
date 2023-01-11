@@ -2,6 +2,7 @@ import { existsSync, mkdirSync } from "fs";
 import { logger } from "..";
 import refreshChannels from "../Refresher/RefreshChannels";
 import refreshRoles from "../Refresher/RefreshRoles";
+import refreshSpiritServer from "../Refresher/RefreshSpiritServer";
 
 export default function refreshCache() {
   const dir = __dirname + "/../Cache/";
@@ -12,5 +13,6 @@ export default function refreshCache() {
 
   refreshChannels();
   refreshRoles();
+  refreshSpiritServer();
   logger.info("[Boot]: Cache refreshed!");
 }
