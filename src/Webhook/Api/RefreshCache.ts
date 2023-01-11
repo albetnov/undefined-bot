@@ -2,6 +2,7 @@ import refreshChannels from "../../Refresher/RefreshChannels";
 import refreshRoles from "../../Refresher/RefreshRoles";
 import BaseApi, { ApiHandlerInterface, ApiMethods } from "../../Utils/BaseApi";
 import refreshSpiritServer from "../../Refresher/RefreshSpiritServer";
+import refreshHolyServer from "../../Refresher/RefreshHolyServer";
 
 export default class RefreshCache extends BaseApi<Promise<object>> {
   url = "/refreshCache";
@@ -14,7 +15,8 @@ export default class RefreshCache extends BaseApi<Promise<object>> {
         properties: {
           channels: { type: "boolean" },
           roles: { type: "boolean" },
-          spiritServer: {type: "boolean"}
+          spiritServer: {type: "boolean"},
+          holy: {type: "boolean"}
         },
       },
     });
@@ -33,10 +35,13 @@ export default class RefreshCache extends BaseApi<Promise<object>> {
       await refreshRoles();
     } else if("spirit" in body) {
       await refreshSpiritServer();
+    } else if("holy" in body) {
+      await refreshHolyServer();
     } else {
       await refreshChannels();
       await refreshRoles();
       await refreshSpiritServer();
+      await refreshHolyServer();
     }
     return { message: "Cache refreshed!" };
   }

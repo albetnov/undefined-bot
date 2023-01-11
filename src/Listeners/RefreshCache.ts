@@ -2,6 +2,7 @@ import refreshChannels from "../Refresher/RefreshChannels";
 import refreshRoles from "../Refresher/RefreshRoles";
 import BaseListener, { HandlerProps } from "../Utils/BaseListener";
 import refreshSpiritServer from "../Refresher/RefreshSpiritServer";
+import refreshHolyServer from "../Refresher/RefreshHolyServer";
 
 export class RefreshCache extends BaseListener {
   name = "RefreshCache";
@@ -23,6 +24,10 @@ export class RefreshCache extends BaseListener {
           await refreshSpiritServer();
           response.channel.send("Spirit Server cache refreshed!");
           return;
+        case "holy":
+          await refreshHolyServer();
+          response.channel.send("Holy Server cache refreshed!");
+          return;
         default:
           response.channel.send("Parameter invalid!");
           return;
@@ -31,6 +36,7 @@ export class RefreshCache extends BaseListener {
     await refreshChannels();
     await refreshRoles();
     await refreshSpiritServer()
+    await refreshHolyServer();
     response.channel.send("All cache has been refreshed!");
   }
 }

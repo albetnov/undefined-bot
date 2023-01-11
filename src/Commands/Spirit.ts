@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, EmbedBuilder, User } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
 import random from "../Utils/random";
 import SpiritServerRepository from "../Repositories/SpiritServerRepository";
+import HolyServerRepository from "../Repositories/HolyServerRepository";
 
 export default class Spirit extends BaseCommand {
   name = "spirit";

@@ -3,6 +3,7 @@ import refreshRoles from "../../Refresher/RefreshRoles";
 import BaseListener, { SocketListenerHandler } from "./BaseListener";
 import { z } from "zod";
 import refreshSpiritServer from "../../Refresher/RefreshSpiritServer";
+import refreshHolyServer from "../../Refresher/RefreshHolyServer";
 
 export default class RefreshCache extends BaseListener {
   socket: string = "RefreshCache";
@@ -13,7 +14,8 @@ export default class RefreshCache extends BaseListener {
     const bodySchema = z.object({
       channels: z.boolean().optional(),
       roles: z.boolean().optional(),
-      spiritServer: z.boolean().optional()
+      spiritServer: z.boolean().optional(),
+      holyServer: z.boolean().optional()
     });
 
     const result = bodySchema.safeParse(body);
@@ -25,10 +27,14 @@ export default class RefreshCache extends BaseListener {
         refreshRoles();
       } else if(result.data.spiritServer) {
         refreshSpiritServer();
-      } else {
+      } else if(result.data.holyServer) {
+        refreshHolyServer();
+      }
+      else {
         refreshChannels();
         refreshRoles();
         refreshSpiritServer();
+        refreshHolyServer();
       }
     }
 
