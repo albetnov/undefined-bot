@@ -1,24 +1,24 @@
 import {
-  AttachmentBuilder,
-  CacheType,
-  ChatInputCommandInteraction,
-  EmbedBuilder,
+    AttachmentBuilder,
+    CacheType,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
 } from "discord.js";
 import BaseCommand from "../Utils/BaseCommand";
 import env from "../Utils/env";
 
 export default class About extends BaseCommand {
-  name = "about";
-  description = "What is me?";
+    name = "about";
+    description = "What is me?";
 
-  handler(action: ChatInputCommandInteraction<CacheType>): void {
-    const gambarAyang = new AttachmentBuilder("./assets/ayang.jpeg");
+    handler(action: ChatInputCommandInteraction<CacheType>): void {
+        const gambarAyang = new AttachmentBuilder("./assets/ayang.jpeg");
 
-    const ayang = new EmbedBuilder()
-      .setTitle("🤍")
-      .setImage("attachment://ayang.jpeg")
-      .setDescription(
-        `
+        const ayang = new EmbedBuilder()
+            .setTitle("🤍")
+            .setImage("attachment://ayang.jpeg")
+            .setDescription(
+                `
         Artisan: A Assistant for Artisans
         v${env("APP_VERSION", "0.1")} (State: Pre-Alpha Release)
 
@@ -31,12 +31,13 @@ export default class About extends BaseCommand {
 
         Contributors:
         - Atnan (testers)
+        - Wira (Holy Providers)
         `
-      );
+            );
 
-    action.reply({
-      embeds: [ayang],
-      files: [gambarAyang],
-    });
-  }
+        action.reply({
+            embeds: [ayang],
+            files: [gambarAyang],
+        });
+    }
 }
