@@ -33,10 +33,9 @@ export class RefreshCache extends BaseListener {
           return;
       }
     }
-    await refreshChannels();
-    await refreshRoles();
-    await refreshSpiritServer()
-    await refreshHolyServer();
-    response.channel.send("All cache has been refreshed!");
+
+    Promise.all([refreshChannels(), refreshRoles(), refreshSpiritServer(), refreshHolyServer()]);
+
+    response.channel.send(`All cache has been refreshed!`);
   }
 }
