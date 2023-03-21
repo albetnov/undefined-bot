@@ -1,9 +1,11 @@
 import { ChatInputCommandInteraction, EmbedBuilder, MessageReaction, User } from "discord.js";
+import { DocumentData } from "firebase/firestore";
 import { logger } from "..";
 import LoveRepository from "../Repositories/LoveRepository";
 import BaseCommand from "../Utils/BaseCommand";
 
 const BROKEN_HEART = "💔";
+const HEART = "❤️";
 
 export default class Love extends BaseCommand {
   name = "love";
@@ -14,7 +16,11 @@ export default class Love extends BaseCommand {
     this.handler = this.handler.bind(this);
   }
 
-  async hasLoverHandler(action: ChatInputCommandInteraction, love: LoveRepository) {
+  async hasLoverHandler(
+    action: ChatInputCommandInteraction,
+    love: LoveRepository,
+    user: DocumentData
+  ) {
     const message = await action.editReply({
       content: "Ente udah ada bang, mau ganti kah?",
       options: {
@@ -40,7 +46,7 @@ export default class Love extends BaseCommand {
       const emoji = collected.first()?.emoji.name;
 
       if (emoji === BROKEN_HEART) {
-        await love.save(action.user.id);
+        await Promise.all([love.engage(action.user.id), love.divorce(user.id)]);
         message.reply("Parah kamu mas :cry:");
       }
       return;
@@ -49,21 +55,14 @@ export default class Love extends BaseCommand {
     }
   }
 
-  embed() {
+  embed(title: string, image: string, desc: string, icon: string, ownedId?: string) {
     return new EmbedBuilder()
-      .setTitle("Kujou, Alisa Mikhailovna")
-      .setImage("https://cdn.myanimelist.net/images/anime/1922/134324.jpg")
-      .setDescription(
-        `Smart, refined, and strikingly gorgeous, half-Russian half-Japanese Alisa Mikhailovna Kujou 
-        is considered the idol of her school. With her long silver hair, mesmerizing blue eyes, and 
-        exceptionally fair skin, she has captured the hearts of countless male students while being 
-        highly admired by all others. Even so, due to her seemingly unapproachable persona, everyone 
-        remains wary around the near-flawless girl.`
-      )
+      .setTitle(title)
+      .setImage(image)
+      .setDescription(desc)
       .setFooter({
-        text: "Kujou, Alisa Mikhailovna",
-        iconURL:
-          "https://cdn.myanimelist.net/r/42x62/images/characters/4/492823.webp?s=aef4091a20dceea6a7a926b6aa274c48",
+        text: ownedId ? `${title} is in love with ${ownedId} already` : title,
+        iconURL: icon,
       });
   }
 
@@ -75,16 +74,56 @@ export default class Love extends BaseCommand {
     let getUser = await love.getUser(userId);
 
     if (!getUser.exists()) {
-      await love.save(userId);
+      await love.engage(userId);
       getUser = await love.getUser(userId);
     }
 
     const user = getUser.data()!;
 
     if (user.hasLove) {
-      return this.hasLoverHandler(action, love);
+      return this.hasLoverHandler(action, love, user);
     }
 
-    return action.editReply({ embeds: [this.embed()] });
+    const randomItem = await love.getRandomItem();
+
+    const message = await action.editReply({
+      embeds: [
+        this.embed(
+          randomItem.fullName,
+          randomItem.image,
+          randomItem.desc,
+          randomItem.icon,
+          action.client.users.cache.get(randomItem.owned)?.username
+        ),
+      ],
+      options: { fetchReply: true },
+    });
+
+    if (!randomItem.owned) {
+      await message.react(HEART);
+
+      const filter = (reaction: MessageReaction, user: User) => {
+        return reaction.emoji.name === HEART && user.id !== action.client.user.id;
+      };
+
+      const collector = message.createReactionCollector({ filter, time: 30000, max: 1 });
+
+      collector.on("collect", (reaction: MessageReaction, user: User) => {
+        if (reaction.emoji.name !== HEART) {
+          return;
+        }
+
+        love.engage(user.id, randomItem.id);
+        if (user.id !== userId) {
+          message.reply(
+            `Nt terebut wkwkwk, :love:. ${randomItem.fullName} sekarang punya ${user.id}`
+          );
+        } else {
+          message.reply(`Mantap, enjoy ur ${randomItem.fullName} :smile:`);
+        }
+      });
+    }
+
+    return;
   }
 }
